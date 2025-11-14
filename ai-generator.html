@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Document Generator - DURAI</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ai-generator.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" rx="8" fill="#2563eb"/>
+                    <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">D</text>
+                </svg>
+                <span class="brand">DURAI</span>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="ai-generator.html" class="active">AI Generator</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero ai-hero">
+                <h1>✨ AI Document Generator</h1>
+                <p class="subtitle">Create professional documents with AI-powered templates</p>
+            </section>
+
+            <section class="generator-section">
+                <!-- Document Type Selection -->
+                <div class="step-container" id="step1">
+                    <h2>Step 1: Choose Document Type</h2>
+                    <div class="document-types">
+                        <div class="doc-type-card" data-type="permission">
+                            <div class="doc-icon">📋</div>
+                            <h3>Permission Letter</h3>
+                            <p>Request approval or authorization</p>
+                        </div>
+                        <div class="doc-type-card" data-type="cover">
+                            <div class="doc-icon">💼</div>
+                            <h3>Cover Letter</h3>
+                            <p>Professional job application</p>
+                        </div>
+                        <div class="doc-type-card" data-type="resume">
+                            <div class="doc-icon">📄</div>
+                            <h3>Resume/CV</h3>
+                            <p>Showcase your experience</p>
+                        </div>
+                        <div class="doc-type-card" data-type="leave">
+                            <div class="doc-icon">🏖️</div>
+                            <h3>Leave Letter</h3>
+                            <p>Request time off work</p>
+                        </div>
+                        <div class="doc-type-card" data-type="greeting">
+                            <div class="doc-icon">🎉</div>
+                            <h3>Greeting Card</h3>
+                            <p>Celebrate special occasions</p>
+                        </div>
+                        <div class="doc-type-card" data-type="business">
+                            <div class="doc-icon">📧</div>
+                            <h3>Business Letter</h3>
+                            <p>Professional correspondence</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Selection -->
+                <div class="step-container hidden" id="step2">
+                    <button class="back-btn" onclick="goToStep(1)">← Back</button>
+                    <h2>Step 2: Choose Template</h2>
+                    <div id="templateGrid" class="template-grid"></div>
+                </div>
+
+                <!-- Customization -->
+                <div class="step-container hidden" id="step3">
+                    <button class="back-btn" onclick="goToStep(2)">← Back</button>
+                    <h2>Step 3: Customize Your Document</h2>
+                    
+                    <div class="customization-panel">
+                        <div class="customize-left">
+                            <!-- Style Options -->
+                            <div class="customize-section">
+                                <h3>🎨 Style Options</h3>
+                                <div class="style-options">
+                                    <div class="style-option">
+                                        <label>Color Theme:</label>
+                                        <div class="color-picker">
+                                            <div class="color-swatch" data-color="#2563eb" style="background: #2563eb"></div>
+                                            <div class="color-swatch" data-color="#059669" style="background: #059669"></div>
+                                            <div class="color-swatch" data-color="#dc2626" style="background: #dc2626"></div>
+                                            <div class="color-swatch" data-color="#7c3aed" style="background: #7c3aed"></div>
+                                            <div class="color-swatch" data-color="#ea580c" style="background: #ea580c"></div>
+                                            <div class="color-swatch" data-color="#0891b2" style="background: #0891b2"></div>
+                                            <div class="color-swatch" data-color="#be123c" style="background: #be123c"></div>
+                                            <div class="color-swatch" data-color="#0f172a" style="background: #0f172a"></div>
+                                        </div>
+                                    </div>
+                                    <div class="style-option">
+                                        <label>Font Style:</label>
+                                        <select id="fontSelect" class="style-select">
+                                            <option value="Arial, sans-serif">Arial (Modern)</option>
+                                            <option value="'Times New Roman', serif">Times New Roman (Classic)</option>
+                                            <option value="'Georgia', serif">Georgia (Elegant)</option>
+                                            <option value="'Courier New', monospace">Courier (Typewriter)</option>
+                                            <option value="'Verdana', sans-serif">Verdana (Clean)</option>
+                                            <option value="'Trebuchet MS', sans-serif">Trebuchet (Professional)</option>
+                                            <option value="'Comic Sans MS', cursive">Comic Sans (Casual)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content Input -->
+                            <div class="customize-section">
+                                <h3>✍️ Document Content</h3>
+                                <div id="contentForm" class="content-form"></div>
+                            </div>
+                        </div>
+
+                        <div class="customize-right">
+                            <div class="preview-container">
+                                <h3>📄 Live Preview</h3>
+                                <div id="documentPreview" class="document-preview"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="generateBtn" class="generate-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Generate & Download PDF
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 DURAI Document Converter. All rights reserved.</p>
+                <p>Created by DURAI</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="ai-generator.js"></script>
+</body>
+</html>

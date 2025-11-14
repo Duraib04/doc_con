@@ -335,23 +335,29 @@ function loadCustomization() {
             return `
                 <div class="form-group">
                     <label>${config.label}</label>
-                    <textarea 
-                        id="field_${fieldName}" 
-                        placeholder="${config.placeholder}"
-                        data-field="${fieldName}"
-                    ></textarea>
+                    <div class="input-with-ai">
+                        <textarea 
+                            id="field_${fieldName}" 
+                            placeholder="${config.placeholder}"
+                            data-field="${fieldName}"
+                        ></textarea>
+                        <button type="button" class="ai-suggest-btn" onclick="suggestContent('field_${fieldName}')" title="AI Generate Content">✨ AI</button>
+                    </div>
                 </div>
             `;
         } else {
             return `
                 <div class="form-group">
                     <label>${config.label}</label>
-                    <input 
-                        type="${config.type}" 
-                        id="field_${fieldName}" 
-                        placeholder="${config.placeholder}"
-                        data-field="${fieldName}"
-                    />
+                    <div class="input-with-ai">
+                        <input 
+                            type="${config.type}" 
+                            id="field_${fieldName}" 
+                            placeholder="${config.placeholder}"
+                            data-field="${fieldName}"
+                        />
+                        <button type="button" class="ai-suggest-btn" onclick="suggestContent('field_${fieldName}')" title="AI Suggestion">✨ AI</button>
+                    </div>
                 </div>
             `;
         }
@@ -850,4 +856,121 @@ function showNotification(message, type = 'success') {
     setTimeout(() => {
         notification.remove();
     }, 3000);
+}
+
+// AI Content Suggestion System
+const aiSuggestions = {
+    permission: {
+        recipientName: ['Mr. John Smith', 'Dr. Sarah Johnson', 'Ms. Emily Davis'],
+        recipientTitle: ['Manager', 'Director', 'Principal', 'Head of Department'],
+        organization: ['ABC Corporation', 'Tech Solutions Inc.', 'Global Enterprises'],
+        subject: ['Request for Permission to Attend Conference', 'Permission for Leave of Absence', 'Request for Remote Work Permission'],
+        reason: ['I would like to request permission to attend the Annual Technology Conference in San Francisco from March 15-17, 2025. This conference will provide valuable insights into emerging technologies and industry trends that will benefit our team.', 'I am writing to request permission for a brief leave of absence due to personal matters that require my immediate attention.', 'I would like to request permission to work remotely for the next two weeks to better manage my personal commitments while maintaining my work responsibilities.'],
+        duration: ['3 days', '1 week', '2 weeks', '1 month'],
+        senderName: ['John Doe', 'Jane Smith', 'Michael Brown'],
+        principalName: ['Dr. Robert Wilson', 'Mrs. Patricia Anderson', 'Mr. David Martinez'],
+        schoolName: ['Lincoln High School', 'Washington Elementary', 'Jefferson Academy'],
+        studentName: ['Emily Johnson', 'Michael Chen', 'Sarah Williams'],
+        parentName: ['Mr. Robert Johnson', 'Mrs. Linda Chen', 'Mr. James Williams']
+    },
+    cover: {
+        hiringManager: ['Hiring Manager', 'Dear Hiring Team', 'Dear Recruitment Manager'],
+        company: ['Google', 'Microsoft', 'Amazon', 'Tesla', 'Apple'],
+        position: ['Software Engineer', 'Marketing Manager', 'Data Analyst', 'Product Manager', 'UX Designer'],
+        introduction: ['I am writing to express my strong interest in the [position] position at [company]. With [X] years of experience in [field], I am confident that my skills and passion make me an excellent fit for your team.', 'I am excited to apply for the [position] role at [company]. My background in [field] and proven track record of [achievement] align perfectly with the requirements outlined in the job posting.'],
+        experience: ['In my current role at [Company], I have successfully led multiple projects that resulted in [specific outcomes]. I have developed expertise in [skills] and consistently delivered results that exceeded expectations.', 'Throughout my career, I have gained extensive experience in [field], working on diverse projects that have honed my skills in [specific areas]. My ability to [key strength] has been instrumental in driving success.'],
+        whyCompany: ['I am particularly drawn to [Company] because of your commitment to innovation and your impact on [industry/field]. Your recent work on [project/initiative] aligns perfectly with my professional goals and values.', '[Company]\'s reputation for fostering talent and pushing the boundaries of [field] makes it my top choice for career growth.'],
+        closing: ['Thank you for considering my application. I look forward to the opportunity to discuss how my skills and experience can contribute to your team\'s success.', 'I would welcome the chance to discuss how I can add value to your organization. Thank you for your time and consideration.'],
+        yourName: ['Alex Johnson', 'Sarah Miller', 'David Wilson'],
+        portfolio: ['https://portfolio.example.com', 'https://github.com/username', 'https://dribbble.com/username']
+    },
+    resume: {
+        fullName: ['John Michael Doe', 'Sarah Elizabeth Smith', 'Michael Anthony Chen'],
+        title: ['Senior Software Engineer', 'Marketing Manager', 'Data Scientist', 'Product Designer', 'Financial Analyst'],
+        email: ['john.doe@email.com', 'sarah.smith@email.com', 'michael.chen@email.com'],
+        phone: ['+1 (555) 123-4567', '+1 (555) 987-6543', '+1 (555) 246-8135'],
+        location: ['San Francisco, CA', 'New York, NY', 'Seattle, WA', 'Austin, TX', 'Boston, MA'],
+        summary: ['Experienced software engineer with 5+ years of expertise in full-stack development. Proven track record of building scalable applications and leading cross-functional teams to deliver high-quality solutions.', 'Results-driven marketing professional with 7+ years of experience in digital marketing, brand strategy, and customer acquisition. Skilled in data-driven decision making and campaign optimization.', 'Detail-oriented data scientist with strong analytical skills and 4+ years of experience in machine learning, statistical modeling, and data visualization.'],
+        experience: ['Senior Software Engineer | Tech Corp | 2020-Present\n• Led development of microservices architecture serving 1M+ users\n• Improved system performance by 40% through optimization\n• Mentored team of 5 junior developers', 'Software Engineer | StartUp Inc | 2018-2020\n• Developed and maintained web applications using React and Node.js\n• Collaborated with product team to define and implement features\n• Reduced bug count by 30% through improved testing practices'],
+        education: ['Bachelor of Science in Computer Science\nStanford University | 2014-2018 | GPA: 3.8/4.0', 'Master of Business Administration\nHarvard Business School | 2018-2020', 'Bachelor of Arts in Marketing\nUniversity of California, Berkeley | 2015-2019'],
+        skills: ['JavaScript, Python, React, Node.js, AWS, Docker, SQL, MongoDB, Git, Agile', 'Digital Marketing, SEO, Content Strategy, Google Analytics, Social Media Marketing, Email Marketing', 'Python, R, Machine Learning, TensorFlow, SQL, Tableau, Statistics, Data Visualization'],
+        technicalSkills: ['Languages: Python, Java, JavaScript, C++, SQL\nFrameworks: React, Angular, Django, Spring Boot\nTools: Git, Docker, Kubernetes, Jenkins, AWS\nDatabases: PostgreSQL, MongoDB, Redis'],
+        certifications: ['AWS Certified Solutions Architect\nGoogle Cloud Professional\nScrum Master Certification']
+    },
+    leave: {
+        managerName: ['Mr. Johnson', 'Ms. Davis', 'Dr. Smith'],
+        leaveType: ['Annual Leave', 'Sick Leave', 'Personal Leave', 'Emergency Leave', 'Bereavement Leave'],
+        reason: ['I would like to request leave to attend a family wedding in another state.', 'I am requesting sick leave as I am experiencing health issues that require rest and medical attention.', 'I need to take emergency leave due to an unexpected family situation that requires my immediate presence.', 'I would like to request annual leave to spend time with my family during the holiday season.'],
+        contactInfo: ['Available at +1 (555) 123-4567', 'Emergency contact: +1 (555) 987-6543', 'Email: john.doe@email.com'],
+        employeeId: ['EMP12345', 'EMP98765', 'EMP54321'],
+        emergencyType: ['Family Medical Emergency', 'Personal Emergency', 'Home Emergency'],
+        contactNumber: ['+1 (555) 123-4567', '+1 (555) 987-6543', '+1 (555) 246-8135']
+    },
+    greeting: {
+        recipientName: ['Sarah', 'Michael', 'Emily', 'David', 'Jessica'],
+        message: ['Wishing you a day filled with love, laughter, and wonderful memories. May this special day bring you joy and happiness!', 'Congratulations on your amazing achievement! Your hard work and dedication have truly paid off. Wishing you continued success!', 'Thank you so much for everything you do. Your kindness and support mean the world to me. I am truly grateful to have you in my life.'],
+        wishes: ['May all your dreams come true and may you find happiness in everything you do!', 'Wishing you success, health, and prosperity in all your endeavors!', 'May this occasion bring you closer to your goals and fill your life with joy!'],
+        coupleName: ['John and Sarah', 'Michael and Emily', 'David and Jessica'],
+        years: ['1', '5', '10', '25', '50'],
+        achievement: ['graduation', 'promotion', 'new job', 'new home', 'new baby'],
+        holiday: ['Christmas', 'New Year', 'Thanksgiving', 'Easter', 'Diwali']
+    },
+    business: {
+        company: ['ABC Corporation', 'Tech Solutions Inc.', 'Global Enterprises Ltd.', 'Innovation Labs'],
+        proposal: ['We are pleased to present our proposal for [project/service]. Our solution offers [key benefits] and is designed to meet your specific needs. We have successfully implemented similar solutions for [number] clients with excellent results.', 'This proposal outlines our comprehensive approach to [objective]. Our team brings [X] years of experience and has delivered [achievements]. We are confident in our ability to exceed your expectations.'],
+        benefits: ['Cost reduction by 30%\nIncreased efficiency and productivity\nImproved customer satisfaction\nScalable solution for future growth', 'Enhanced data security\nStreamlined operations\n24/7 support and maintenance\nROI within 6 months'],
+        nextSteps: ['We propose a meeting next week to discuss the details and answer any questions.\nProject timeline: 3 months\nDelivery in phases with regular milestone reviews', 'Schedule a discovery call\nCustomize solution based on feedback\nProvide detailed timeline and pricing\nBegin implementation upon approval'],
+        inquiry: ['We are interested in learning more about your [product/service] offerings. Could you please provide information about pricing, features, and implementation timeline?', 'I am reaching out to inquire about potential partnership opportunities between our organizations. We believe there is strong alignment in our goals and values.'],
+        questions: ['What is the pricing structure?\nWhat is the implementation timeline?\nWhat support and training do you provide?\nAre there any case studies available?', 'What are the contract terms?\nWhat customization options are available?\nHow do you handle data security?\nWhat is your customer retention rate?'],
+        orderNumber: ['ORD-2025-001', 'INV-12345', 'REF-98765'],
+        issue: ['I am writing to formally complain about [issue]. Despite multiple attempts to resolve this matter, the problem persists. The issue occurred on [date] and has caused [impact].', 'I recently received order #[number] and found that [problem]. This is unacceptable and not what I expected based on your product description.'],
+        resolution: ['I request a full refund and compensation for the inconvenience caused.', 'I would appreciate a replacement product sent at your earliest convenience.', 'I expect this issue to be resolved within [timeframe] and would like confirmation of the resolution plan.']
+    }
+};
+
+function suggestContent(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    const fieldName = field.dataset.field;
+    const button = event.target;
+    
+    // Show loading state
+    button.classList.add('ai-loading');
+    button.textContent = '⏳ Generating...';
+    
+    // Simulate AI processing
+    setTimeout(() => {
+        const suggestions = aiSuggestions[selectedDocType]?.[fieldName];
+        
+        if (suggestions && suggestions.length > 0) {
+            // Get a random suggestion
+            const suggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            
+            // Populate the field
+            field.value = suggestion;
+            documentData[fieldName] = suggestion;
+            
+            // Trigger preview update
+            updatePreview();
+            
+            // Show success feedback
+            button.textContent = '✓ Generated!';
+            button.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                button.classList.remove('ai-loading');
+                button.textContent = '✨ AI';
+                button.style.background = '';
+            }, 2000);
+            
+            showNotification('AI suggestion applied successfully!', 'success');
+        } else {
+            // No suggestions available
+            button.classList.remove('ai-loading');
+            button.textContent = '✨ AI';
+            showNotification('No suggestions available for this field', 'info');
+        }
+    }, 800);
 }

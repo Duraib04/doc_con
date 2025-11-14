@@ -249,6 +249,82 @@
     resize: vertical;
 }
 
+/* AI Suggestion Buttons */
+.input-with-ai {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.input-with-ai input,
+.input-with-ai textarea {
+    flex: 1;
+}
+
+.ai-suggest-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    flex-shrink: 0;
+}
+
+.ai-suggest-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+.ai-suggest-btn:active {
+    transform: translateY(0);
+}
+
+.ai-loading {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.ai-tips {
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+    border-left: 4px solid #667eea;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #555;
+    display: none;
+    animation: slideIn 0.3s ease;
+}
+
+.ai-tips.visible {
+    display: block;
+}
+
+.ai-tips strong {
+    color: #667eea;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .form-group small {
     color: #6b7280;
     margin-top: 0.25rem;
@@ -445,6 +521,10 @@
 
 .notification.error {
     border-left: 4px solid #ef4444;
+}
+
+.notification.info {
+    border-left: 4px solid #3b82f6;
 }
 
 .notification-icon {

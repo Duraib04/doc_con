@@ -31,13 +31,16 @@
         <main>
             <section class="hero ai-hero">
                 <h1>✨ AI Document Generator</h1>
-                <p class="subtitle">Create professional documents with AI-powered templates</p>
+                <p class="subtitle">Create professional documents with AI-powered templates and advanced customization</p>
             </section>
 
             <section class="generator-section">
                 <!-- Document Type Selection -->
                 <div class="step-container" id="step1">
-                    <h2>Step 1: Choose Document Type</h2>
+                    <div class="step-header">
+                        <span class="step-badge">Step 1</span>
+                        <h2>Choose Document Type</h2>
+                    </div>
                     <div class="document-types">
                         <div class="doc-type-card" data-type="permission">
                             <div class="doc-icon">📋</div>
@@ -69,71 +72,235 @@
                             <h3>Business Letter</h3>
                             <p>Professional correspondence</p>
                         </div>
+                        <div class="doc-type-card" data-type="report">
+                            <div class="doc-icon">📊</div>
+                            <h3>Report</h3>
+                            <p>Professional analysis report</p>
+                        </div>
+                        <div class="doc-type-card" data-type="proposal">
+                            <div class="doc-icon">📝</div>
+                            <h3>Proposal</h3>
+                            <p>Business proposal document</p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Template Selection -->
                 <div class="step-container hidden" id="step2">
                     <button class="back-btn" onclick="goToStep(1)">← Back</button>
-                    <h2>Step 2: Choose Template</h2>
+                    <div class="step-header">
+                        <span class="step-badge">Step 2</span>
+                        <h2>Choose Template</h2>
+                    </div>
                     <div id="templateGrid" class="template-grid"></div>
                 </div>
 
-                <!-- Customization -->
+                <!-- Advanced Configuration -->
                 <div class="step-container hidden" id="step3">
                     <button class="back-btn" onclick="goToStep(2)">← Back</button>
-                    <h2>Step 3: Customize Your Document</h2>
+                    <div class="step-header">
+                        <span class="step-badge">Step 3</span>
+                        <h2>Configure Your Document</h2>
+                    </div>
                     
-                    <div class="customization-panel">
-                        <div class="customize-left">
-                            <!-- Style Options -->
-                            <div class="customize-section">
-                                <h3>🎨 Style Options</h3>
-                                <div class="style-options">
-                                    <div class="style-option">
-                                        <label>Color Theme:</label>
-                                        <div class="color-picker">
-                                            <div class="color-swatch" data-color="#2563eb" style="background: #2563eb"></div>
-                                            <div class="color-swatch" data-color="#059669" style="background: #059669"></div>
-                                            <div class="color-swatch" data-color="#dc2626" style="background: #dc2626"></div>
-                                            <div class="color-swatch" data-color="#7c3aed" style="background: #7c3aed"></div>
-                                            <div class="color-swatch" data-color="#ea580c" style="background: #ea580c"></div>
-                                            <div class="color-swatch" data-color="#0891b2" style="background: #0891b2"></div>
-                                            <div class="color-swatch" data-color="#be123c" style="background: #be123c"></div>
-                                            <div class="color-swatch" data-color="#0f172a" style="background: #0f172a"></div>
-                                        </div>
-                                    </div>
-                                    <div class="style-option">
-                                        <label>Font Style:</label>
-                                        <select id="fontSelect" class="style-select">
-                                            <option value="Arial, sans-serif">Arial (Modern)</option>
-                                            <option value="'Times New Roman', serif">Times New Roman (Classic)</option>
-                                            <option value="'Georgia', serif">Georgia (Elegant)</option>
-                                            <option value="'Courier New', monospace">Courier (Typewriter)</option>
-                                            <option value="'Verdana', sans-serif">Verdana (Clean)</option>
-                                            <option value="'Trebuchet MS', sans-serif">Trebuchet (Professional)</option>
-                                            <option value="'Comic Sans MS', cursive">Comic Sans (Casual)</option>
-                                        </select>
-                                    </div>
+                    <div class="config-grid">
+                        <!-- Page Configuration -->
+                        <div class="config-card">
+                            <h3>📄 Page Settings</h3>
+                            <div class="form-group">
+                                <label for="pageCount">Number of Pages:</label>
+                                <div class="range-input-group">
+                                    <input type="range" id="pageCount" min="5" max="20" value="10" step="1">
+                                    <span id="pageCountValue" class="range-value">10 pages</span>
                                 </div>
                             </div>
-
-                            <!-- Content Input -->
-                            <div class="customize-section">
-                                <h3>✍️ Document Content</h3>
-                                <div id="contentForm" class="content-form"></div>
+                            <div class="form-group">
+                                <label for="pageSize">Page Size:</label>
+                                <select id="pageSize" class="style-select">
+                                    <option value="a4">A4 (210 × 297 mm)</option>
+                                    <option value="letter">Letter (8.5 × 11 in)</option>
+                                    <option value="legal">Legal (8.5 × 14 in)</option>
+                                </select>
                             </div>
                         </div>
 
-                        <div class="customize-right">
-                            <div class="preview-container">
-                                <h3>📄 Live Preview</h3>
-                                <div id="documentPreview" class="document-preview"></div>
+                        <!-- Content Selection -->
+                        <div class="config-card">
+                            <h3>📝 Content Sections</h3>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="executive-summary" checked>
+                                    <span>Executive Summary</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="introduction" checked>
+                                    <span>Introduction</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="methodology">
+                                    <span>Methodology</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="analysis" checked>
+                                    <span>Analysis & Findings</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="data-tables">
+                                    <span>Data Tables</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="charts">
+                                    <span>Charts & Graphs</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="recommendations" checked>
+                                    <span>Recommendations</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="conclusion" checked>
+                                    <span>Conclusion</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="references">
+                                    <span>References</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="appendix">
+                                    <span>Appendix</span>
+                                </label>
                             </div>
+                        </div>
+
+                        <!-- Analysis Options -->
+                        <div class="config-card">
+                            <h3>🔍 Analysis Type</h3>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="analysis" value="basic" checked>
+                                    <span>
+                                        <strong>Basic Analysis</strong>
+                                        <small>Overview and key points</small>
+                                    </span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="analysis" value="detailed">
+                                    <span>
+                                        <strong>Detailed Analysis</strong>
+                                        <small>In-depth examination with data</small>
+                                    </span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="analysis" value="comprehensive">
+                                    <span>
+                                        <strong>Comprehensive Analysis</strong>
+                                        <small>Full analysis with statistics</small>
+                                    </span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="analysis" value="technical">
+                                    <span>
+                                        <strong>Technical Analysis</strong>
+                                        <small>Technical specifications & metrics</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Color Customization -->
+                        <div class="config-card">
+                            <h3>🎨 Color Scheme</h3>
+                            <div class="form-group">
+                                <label for="textColor">Text Color:</label>
+                                <div class="color-input-group">
+                                    <input type="color" id="textColor" value="#1a1a1a">
+                                    <input type="text" id="textColorHex" value="#1a1a1a" class="color-hex-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="backgroundColor">Background Color:</label>
+                                <div class="color-input-group">
+                                    <input type="color" id="backgroundColor" value="#ffffff">
+                                    <input type="text" id="backgroundColorHex" value="#ffffff" class="color-hex-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="accentColor">Accent Color:</label>
+                                <div class="color-input-group">
+                                    <input type="color" id="accentColor" value="#2563eb">
+                                    <input type="text" id="accentColorHex" value="#2563eb" class="color-hex-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Quick Presets:</label>
+                                <div class="color-presets">
+                                    <button class="preset-btn" data-text="#1a1a1a" data-bg="#ffffff" data-accent="#2563eb" title="Professional Blue">
+                                        <span style="background: linear-gradient(135deg, #ffffff 0%, #2563eb 100%)"></span>
+                                    </button>
+                                    <button class="preset-btn" data-text="#ffffff" data-bg="#1a1a1a" data-accent="#10b981" title="Dark Mode">
+                                        <span style="background: linear-gradient(135deg, #1a1a1a 0%, #10b981 100%)"></span>
+                                    </button>
+                                    <button class="preset-btn" data-text="#2d3748" data-bg="#f7fafc" data-accent="#805ad5" title="Elegant Purple">
+                                        <span style="background: linear-gradient(135deg, #f7fafc 0%, #805ad5 100%)"></span>
+                                    </button>
+                                    <button class="preset-btn" data-text="#1a202c" data-bg="#fef5e7" data-accent="#d69e2e" title="Warm Gold">
+                                        <span style="background: linear-gradient(135deg, #fef5e7 0%, #d69e2e 100%)"></span>
+                                    </button>
+                                    <button class="preset-btn" data-text="#ffffff" data-bg="#1e3a8a" data-accent="#60a5fa" title="Corporate Blue">
+                                        <span style="background: linear-gradient(135deg, #1e3a8a 0%, #60a5fa 100%)"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Font Settings -->
+                        <div class="config-card">
+                            <h3>✍️ Typography</h3>
+                            <div class="form-group">
+                                <label for="fontFamily">Font Family:</label>
+                                <select id="fontFamily" class="style-select">
+                                    <option value="Arial, sans-serif">Arial (Modern)</option>
+                                    <option value="'Times New Roman', serif">Times New Roman (Classic)</option>
+                                    <option value="'Georgia', serif">Georgia (Elegant)</option>
+                                    <option value="'Courier New', monospace">Courier (Typewriter)</option>
+                                    <option value="'Verdana', sans-serif">Verdana (Clean)</option>
+                                    <option value="'Trebuchet MS', sans-serif">Trebuchet (Professional)</option>
+                                    <option value="'Palatino Linotype', serif">Palatino (Sophisticated)</option>
+                                    <option value="'Garamond', serif">Garamond (Traditional)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fontSize">Base Font Size:</label>
+                                <div class="range-input-group">
+                                    <input type="range" id="fontSize" min="10" max="16" value="12" step="1">
+                                    <span id="fontSizeValue" class="range-value">12pt</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lineHeight">Line Spacing:</label>
+                                <select id="lineHeight" class="style-select">
+                                    <option value="1.0">Single</option>
+                                    <option value="1.15">1.15</option>
+                                    <option value="1.5" selected>1.5</option>
+                                    <option value="2.0">Double</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Content Input -->
+                        <div class="config-card full-width">
+                            <h3>📋 Document Information</h3>
+                            <div id="contentForm" class="content-form"></div>
                         </div>
                     </div>
 
                     <div class="action-buttons">
+                        <button id="previewBtn" class="preview-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Preview Document
+                        </button>
                         <button id="generateBtn" class="generate-btn">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -145,6 +312,23 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Preview Modal -->
+            <div id="previewModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>📄 Document Preview</h2>
+                        <button class="close-modal" onclick="closePreview()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="documentPreview" class="document-preview"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closePreview()">Close</button>
+                        <button class="btn-primary" onclick="generateFromPreview()">Generate PDF</button>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer>

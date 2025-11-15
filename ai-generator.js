@@ -6,6 +6,20 @@ let selectedColor = '#2563eb';
 let selectedFont = 'Arial, sans-serif';
 let documentData = {};
 
+// New configuration options
+let documentConfig = {
+    pageCount: 10,
+    pageSize: 'a4',
+    contentSections: ['executive-summary', 'introduction', 'analysis', 'recommendations', 'conclusion'],
+    analysisType: 'basic',
+    textColor: '#1a1a1a',
+    backgroundColor: '#ffffff',
+    accentColor: '#2563eb',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: 12,
+    lineHeight: '1.5'
+};
+
 // Document Templates
 const templates = {
     permission: [
@@ -973,4 +987,208 @@ function suggestContent(fieldId) {
             showNotification('No suggestions available for this field', 'info');
         }
     }, 800);
+}
+
+// New Configuration Handlers
+document.addEventListener('DOMContentLoaded', function() {
+    initializeConfigHandlers();
+});
+
+function initializeConfigHandlers() {
+    // Page count slider
+    const pageCountSlider = document.getElementById('pageCount');
+    const pageCountValue = document.getElementById('pageCountValue');
+    if (pageCountSlider && pageCountValue) {
+        pageCountSlider.addEventListener('input', function() {
+            documentConfig.pageCount = parseInt(this.value);
+            pageCountValue.textContent = this.value + ' pages';
+        });
+    }
+
+    // Font size slider
+    const fontSizeSlider = document.getElementById('fontSize');
+    const fontSizeValue = document.getElementById('fontSizeValue');
+    if (fontSizeSlider && fontSizeValue) {
+        fontSizeSlider.addEventListener('input', function() {
+            documentConfig.fontSize = parseInt(this.value);
+            fontSizeValue.textContent = this.value + 'pt';
+        });
+    }
+
+    // Page size selector
+    const pageSize = document.getElementById('pageSize');
+    if (pageSize) {
+        pageSize.addEventListener('change', function() {
+            documentConfig.pageSize = this.value;
+        });
+    }
+
+    // Content sections checkboxes
+    const contentCheckboxes = document.querySelectorAll('input[name="content"]');
+    contentCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                if (!documentConfig.contentSections.includes(this.value)) {
+                    documentConfig.contentSections.push(this.value);
+                }
+            } else {
+                documentConfig.contentSections = documentConfig.contentSections.filter(s => s !== this.value);
+            }
+        });
+    });
+
+    // Analysis type radio buttons
+    const analysisRadios = document.querySelectorAll('input[name="analysis"]');
+    analysisRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.checked) {
+                documentConfig.analysisType = this.value;
+            }
+        });
+    });
+
+    // Text color picker
+    const textColor = document.getElementById('textColor');
+    const textColorHex = document.getElementById('textColorHex');
+    if (textColor && textColorHex) {
+        textColor.addEventListener('input', function() {
+            documentConfig.textColor = this.value;
+            textColorHex.value = this.value;
+        });
+        textColorHex.addEventListener('input', function() {
+            if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                documentConfig.textColor = this.value;
+                textColor.value = this.value;
+            }
+        });
+    }
+
+    // Background color picker
+    const backgroundColor = document.getElementById('backgroundColor');
+    const backgroundColorHex = document.getElementById('backgroundColorHex');
+    if (backgroundColor && backgroundColorHex) {
+        backgroundColor.addEventListener('input', function() {
+            documentConfig.backgroundColor = this.value;
+            backgroundColorHex.value = this.value;
+        });
+        backgroundColorHex.addEventListener('input', function() {
+            if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                documentConfig.backgroundColor = this.value;
+                backgroundColor.value = this.value;
+            }
+        });
+    }
+
+    // Accent color picker
+    const accentColor = document.getElementById('accentColor');
+    const accentColorHex = document.getElementById('accentColorHex');
+    if (accentColor && accentColorHex) {
+        accentColor.addEventListener('input', function() {
+            documentConfig.accentColor = this.value;
+            accentColorHex.value = this.value;
+        });
+        accentColorHex.addEventListener('input', function() {
+            if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                documentConfig.accentColor = this.value;
+                accentColor.value = this.value;
+            }
+        });
+    }
+
+    // Color presets
+    const presetButtons = document.querySelectorAll('.preset-btn');
+    presetButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const text = this.dataset.text;
+            const bg = this.dataset.bg;
+            const accent = this.dataset.accent;
+            
+            if (textColor && textColorHex) {
+                textColor.value = text;
+                textColorHex.value = text;
+                documentConfig.textColor = text;
+            }
+            if (backgroundColor && backgroundColorHex) {
+                backgroundColor.value = bg;
+                backgroundColorHex.value = bg;
+                documentConfig.backgroundColor = bg;
+            }
+            if (accentColor && accentColorHex) {
+                accentColor.value = accent;
+                accentColorHex.value = accent;
+                documentConfig.accentColor = accent;
+            }
+            
+            showNotification('Color preset applied!', 'success');
+        });
+    });
+
+    // Font family selector
+    const fontFamily = document.getElementById('fontFamily');
+    if (fontFamily) {
+        fontFamily.addEventListener('change', function() {
+            documentConfig.fontFamily = this.value;
+        });
+    }
+
+    // Line height selector
+    const lineHeight = document.getElementById('lineHeight');
+    if (lineHeight) {
+        lineHeight.addEventListener('change', function() {
+            documentConfig.lineHeight = this.value;
+        });
+    }
+
+    // Preview button
+    const previewBtn = document.getElementById('previewBtn');
+    if (previewBtn) {
+        previewBtn.addEventListener('click', function() {
+            openPreview();
+        });
+    }
+}
+
+// Preview Modal Functions
+function openPreview() {
+    updatePreview();
+    const modal = document.getElementById('previewModal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+function closePreview() {
+    const modal = document.getElementById('previewModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+function generateFromPreview() {
+    closePreview();
+    generateDocument();
+}
+
+// Update the existing generateDocument function to use new config
+function applyDocumentConfig(doc) {
+    // Apply text color
+    doc.setTextColor(documentConfig.textColor);
+    
+    // Apply font
+    const fontMap = {
+        'Arial, sans-serif': 'helvetica',
+        "'Times New Roman', serif": 'times',
+        "'Georgia', serif": 'times',
+        "'Courier New', monospace": 'courier',
+        "'Verdana', sans-serif": 'helvetica',
+        "'Trebuchet MS', sans-serif": 'helvetica',
+        "'Palatino Linotype', serif": 'times',
+        "'Garamond', serif": 'times'
+    };
+    
+    const pdfFont = fontMap[documentConfig.fontFamily] || 'helvetica';
+    doc.setFont(pdfFont);
+    doc.setFontSize(documentConfig.fontSize);
+    
+    return doc;
 }

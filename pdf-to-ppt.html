@@ -73,11 +73,34 @@
                     <div class="editor-controls">
                         <div class="control-group">
                             <label>Title:</label>
-                            <input type="text" id="slideTitle" placeholder="Enter slide title" class="form-control">
+                            <div class="text-controls">
+                                <input type="text" id="slideTitle" placeholder="Enter slide title" class="form-control">
+                                <div class="text-formatting">
+                                    <input type="color" id="titleColor" value="#333333" title="Title Color">
+                                    <select id="titleAlign" class="mini-control" title="Text Alignment">
+                                        <option value="left">⬅️ Left</option>
+                                        <option value="center">↔️ Center</option>
+                                        <option value="right">➡️ Right</option>
+                                    </select>
+                                    <button class="btn-check-grammar" onclick="checkGrammar('slideTitle')" title="Check Grammar">✓ Grammar</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="control-group">
                             <label>Content:</label>
-                            <textarea id="slideContent" placeholder="Enter slide content" class="form-control" rows="4"></textarea>
+                            <div class="text-controls">
+                                <textarea id="slideContent" placeholder="Enter slide content" class="form-control" rows="4"></textarea>
+                                <div class="text-formatting">
+                                    <input type="color" id="contentColor" value="#666666" title="Content Color">
+                                    <select id="contentAlign" class="mini-control" title="Text Alignment">
+                                        <option value="left">⬅️ Left</option>
+                                        <option value="center">↔️ Center</option>
+                                        <option value="right">➡️ Right</option>
+                                        <option value="justify">↔️ Justify</option>
+                                    </select>
+                                    <button class="btn-check-grammar" onclick="checkGrammar('slideContent')" title="Check Grammar">✓ Grammar</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="control-group">
                             <label>Background Color:</label>
@@ -95,6 +118,18 @@
                                 <option value="imageLeft">Image Left</option>
                                 <option value="imageRight">Image Right</option>
                             </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Element Controls:</label>
+                            <div class="element-controls">
+                                <button class="btn-mini" onclick="toggleGroupMode()" id="groupBtn" title="Group/Ungroup Elements">🔗 Group</button>
+                                <button class="btn-mini" onclick="bringToFront()" title="Bring to Front">⬆️ Front</button>
+                                <button class="btn-mini" onclick="sendToBack()" title="Send to Back">⬇️ Back</button>
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="dragMode" onchange="toggleDragMode()">
+                                    <span>🖱️ Drag Mode</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="control-group">
                             <button class="btn-accent" onclick="openImageSearch()">🖼️ Search & Add Images</button>

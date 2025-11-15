@@ -7,6 +7,9 @@ let slides = [];
 let currentSlideIndex = 0;
 let pdfDoc = null;
 let slideImages = {}; // Store images for each slide
+let dragModeEnabled = false;
+let selectedElements = [];
+let groupedElements = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
@@ -18,6 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('colorValue').textContent = e.target.value;
     });
     document.getElementById('slideLayout').addEventListener('change', updateCurrentSlide);
+    
+    // Text formatting controls
+    document.getElementById('titleColor').addEventListener('input', updateCurrentSlide);
+    document.getElementById('contentColor').addEventListener('input', updateCurrentSlide);
+    document.getElementById('titleAlign').addEventListener('change', updateCurrentSlide);
+    document.getElementById('contentAlign').addEventListener('change', updateCurrentSlide);
 });
 
 // Handle PDF upload and conversion
@@ -88,7 +97,12 @@ async function convertPDFToSlides() {
                 bgColor: '#ffffff',
                 layout: 'content',
                 bgImage: imageDataUrl,
-                images: []
+                images: [],
+                titleColor: '#333333',
+                contentColor: '#666666',
+                titleAlign: 'left',
+                contentAlign: 'left',
+                elementPositions: {}
             };
             
             slides.push(slide);
@@ -146,6 +160,12 @@ function selectSlide(index) {
     document.getElementById('colorValue').textContent = slide.bgColor;
     document.getElementById('slideLayout').value = slide.layout;
     
+    // Update text formatting fields
+    document.getElementById('titleColor').value = slide.titleColor || '#333333';
+    document.getElementById('contentColor').value = slide.contentColor || '#666666';
+    document.getElementById('titleAlign').value = slide.titleAlign || 'left';
+    document.getElementById('contentAlign').value = slide.contentAlign || 'left';
+    
     // Update preview
     renderSlidePreview();
     
@@ -164,6 +184,10 @@ function updateCurrentSlide() {
     slide.content = document.getElementById('slideContent').value;
     slide.bgColor = document.getElementById('slideBgColor').value;
     slide.layout = document.getElementById('slideLayout').value;
+    slide.titleColor = document.getElementById('titleColor').value;
+    slide.contentColor = document.getElementById('contentColor').value;
+    slide.titleAlign = document.getElementById('titleAlign').value;
+    slide.contentAlign = document.getElementById('contentAlign').value;
     
     renderSlidePreview();
     renderSlideThumbnails();
@@ -174,22 +198,25 @@ function renderSlidePreview() {
     const canvas = document.getElementById('slideCanvas');
     const slide = slides[currentSlideIndex];
     
+    const titleStyle = `color: ${slide.titleColor || '#333'}; text-align: ${slide.titleAlign || 'left'};`;
+    const contentStyle = `color: ${slide.contentColor || '#666'}; text-align: ${slide.contentAlign || 'left'};`;
+    
     let previewHTML = '';
     
     if (slide.layout === 'title') {
         previewHTML = `
             <div class="slide-layout-title" style="background-color: ${slide.bgColor}">
                 ${slide.bgImage ? `<img src="${slide.bgImage}" class="slide-bg-image">` : ''}
-                <h1>${slide.title || 'Title'}</h1>
-                <p>${slide.content || 'Subtitle'}</p>
+                <h1 class="draggable-element" data-type="title" style="${titleStyle}">${slide.title || 'Title'}</h1>
+                <p class="draggable-element" data-type="content" style="${contentStyle}">${slide.content || 'Subtitle'}</p>
             </div>
         `;
     } else if (slide.layout === 'content') {
         previewHTML = `
             <div class="slide-layout-content" style="background-color: ${slide.bgColor}">
                 ${slide.bgImage ? `<img src="${slide.bgImage}" class="slide-bg-image">` : ''}
-                <h2>${slide.title || 'Title'}</h2>
-                <div class="slide-content-text">${slide.content || 'Content'}</div>
+                <h2 class="draggable-element" data-type="title" style="${titleStyle}">${slide.title || 'Title'}</h2>
+                <div class="slide-content-text draggable-element" data-type="content" style="${contentStyle}">${slide.content || 'Content'}</div>
                 ${renderSlideImages(slide)}
             </div>
         `;
@@ -197,9 +224,9 @@ function renderSlidePreview() {
         previewHTML = `
             <div class="slide-layout-two-column" style="background-color: ${slide.bgColor}">
                 ${slide.bgImage ? `<img src="${slide.bgImage}" class="slide-bg-image">` : ''}
-                <h2>${slide.title || 'Title'}</h2>
+                <h2 class="draggable-element" data-type="title" style="${titleStyle}">${slide.title || 'Title'}</h2>
                 <div class="two-columns">
-                    <div class="column">${slide.content || 'Left Column'}</div>
+                    <div class="column draggable-element" data-type="content" style="${contentStyle}">${slide.content || 'Left Column'}</div>
                     <div class="column">${renderSlideImages(slide)}</div>
                 </div>
             </div>
@@ -209,10 +236,10 @@ function renderSlidePreview() {
         previewHTML = `
             <div class="slide-layout-image-text" style="background-color: ${slide.bgColor}">
                 ${slide.bgImage ? `<img src="${slide.bgImage}" class="slide-bg-image">` : ''}
-                <h2>${slide.title || 'Title'}</h2>
+                <h2 class="draggable-element" data-type="title" style="${titleStyle}">${slide.title || 'Title'}</h2>
                 <div class="image-text-container ${imageFirst ? 'image-left' : 'image-right'}">
                     ${imageFirst ? renderSlideImages(slide) : ''}
-                    <div class="text-content">${slide.content || 'Content'}</div>
+                    <div class="text-content draggable-element" data-type="content" style="${contentStyle}">${slide.content || 'Content'}</div>
                     ${!imageFirst ? renderSlideImages(slide) : ''}
                 </div>
             </div>
@@ -220,6 +247,11 @@ function renderSlidePreview() {
     }
     
     canvas.innerHTML = previewHTML;
+    
+    // Enable drag mode if active
+    if (dragModeEnabled) {
+        enableDragging();
+    }
 }
 
 // Render images in slide
@@ -245,7 +277,12 @@ function addNewSlide() {
         bgColor: '#ffffff',
         layout: 'content',
         bgImage: null,
-        images: []
+        images: [],
+        titleColor: '#333333',
+        contentColor: '#666666',
+        titleAlign: 'left',
+        contentAlign: 'left',
+        elementPositions: {}
     };
     
     slides.push(newSlide);
@@ -594,6 +631,296 @@ function showNotification(message, type = 'info') {
             notification.remove();
         }, 300);
     }, 3000);
+}
+
+// Grammar Checking (using basic built-in checks + LanguageTool API)
+async function checkGrammar(fieldId) {
+    const field = document.getElementById(fieldId);
+    const text = field.value.trim();
+    
+    if (!text) {
+        showNotification('Please enter some text to check', 'info');
+        return;
+    }
+    
+    showNotification('Checking grammar...', 'info');
+    
+    try {
+        // Use LanguageTool API (free tier)
+        const response = await fetch('https://api.languagetool.org/v2/check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `text=${encodeURIComponent(text)}&language=en-US`
+        });
+        
+        const data = await response.json();
+        
+        if (data.matches && data.matches.length > 0) {
+            // Show grammar suggestions
+            let suggestions = '📝 Grammar Suggestions:\n\n';
+            data.matches.slice(0, 5).forEach((match, i) => {
+                suggestions += `${i + 1}. ${match.message}\n`;
+                if (match.replacements && match.replacements.length > 0) {
+                    suggestions += `   Suggestion: ${match.replacements[0].value}\n\n`;
+                }
+            });
+            
+            if (confirm(suggestions + '\nWould you like to apply the first suggestion?')) {
+                const firstMatch = data.matches[0];
+                if (firstMatch.replacements && firstMatch.replacements.length > 0) {
+                    const corrected = text.substring(0, firstMatch.offset) + 
+                                    firstMatch.replacements[0].value + 
+                                    text.substring(firstMatch.offset + firstMatch.length);
+                    field.value = corrected;
+                    updateCurrentSlide();
+                    showNotification('Grammar correction applied!', 'success');
+                }
+            }
+        } else {
+            showNotification('✓ No grammar issues found!', 'success');
+        }
+    } catch (error) {
+        console.error('Grammar check error:', error);
+        // Fallback to basic checks
+        performBasicGrammarCheck(text, field);
+    }
+}
+
+// Basic grammar checks
+function performBasicGrammarCheck(text, field) {
+    const issues = [];
+    
+    // Check for double spaces
+    if (text.includes('  ')) {
+        issues.push('Multiple consecutive spaces found');
+    }
+    
+    // Check for missing capitalization at start
+    if (text.length > 0 && text[0] !== text[0].toUpperCase()) {
+        issues.push('Text should start with capital letter');
+    }
+    
+    // Check for missing punctuation at end
+    const lastChar = text[text.length - 1];
+    if (text.length > 0 && !['.', '!', '?', ':', ';'].includes(lastChar)) {
+        issues.push('Consider adding punctuation at the end');
+    }
+    
+    if (issues.length > 0) {
+        showNotification('Grammar suggestions: ' + issues.join('; '), 'info');
+    } else {
+        showNotification('✓ Basic checks passed!', 'success');
+    }
+}
+
+// Drag Mode
+function toggleDragMode() {
+    dragModeEnabled = document.getElementById('dragMode').checked;
+    
+    if (dragModeEnabled) {
+        enableDragging();
+        showNotification('Drag mode enabled! Click and drag elements to reposition', 'info');
+    } else {
+        disableDragging();
+        showNotification('Drag mode disabled', 'info');
+    }
+}
+
+function enableDragging() {
+    const elements = document.querySelectorAll('.draggable-element');
+    
+    elements.forEach(element => {
+        element.style.cursor = 'move';
+        element.style.position = 'relative';
+        element.classList.add('draggable-active');
+        
+        element.addEventListener('mousedown', startDrag);
+    });
+}
+
+function disableDragging() {
+    const elements = document.querySelectorAll('.draggable-element');
+    
+    elements.forEach(element => {
+        element.style.cursor = 'default';
+        element.classList.remove('draggable-active');
+        element.removeEventListener('mousedown', startDrag);
+    });
+}
+
+let draggedElement = null;
+let startX, startY, startLeft, startTop;
+
+function startDrag(e) {
+    if (!dragModeEnabled) return;
+    
+    draggedElement = e.target.closest('.draggable-element');
+    if (!draggedElement) return;
+    
+    e.preventDefault();
+    
+    const rect = draggedElement.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    
+    const currentLeft = parseFloat(draggedElement.style.left || '0');
+    const currentTop = parseFloat(draggedElement.style.top || '0');
+    
+    startLeft = currentLeft;
+    startTop = currentTop;
+    
+    draggedElement.classList.add('dragging');
+    
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', stopDrag);
+}
+
+function doDrag(e) {
+    if (!draggedElement) return;
+    
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+    
+    draggedElement.style.left = (startLeft + deltaX) + 'px';
+    draggedElement.style.top = (startTop + deltaY) + 'px';
+}
+
+function stopDrag() {
+    if (draggedElement) {
+        draggedElement.classList.remove('dragging');
+        
+        // Save position
+        const slide = slides[currentSlideIndex];
+        const elementType = draggedElement.getAttribute('data-type');
+        if (!slide.elementPositions) {
+            slide.elementPositions = {};
+        }
+        slide.elementPositions[elementType] = {
+            left: draggedElement.style.left,
+            top: draggedElement.style.top
+        };
+        
+        draggedElement = null;
+    }
+    
+    document.removeEventListener('mousemove', doDrag);
+    document.removeEventListener('mouseup', stopDrag);
+}
+
+// Grouping
+function toggleGroupMode() {
+    const btn = document.getElementById('groupBtn');
+    
+    if (selectedElements.length === 0) {
+        // Select mode
+        btn.textContent = '✓ Select';
+        btn.style.background = '#28a745';
+        enableElementSelection();
+        showNotification('Click elements to select for grouping', 'info');
+    } else if (selectedElements.length > 1) {
+        // Group elements
+        groupElements();
+        btn.textContent = '🔗 Group';
+        btn.style.background = '';
+        disableElementSelection();
+    } else {
+        // Cancel
+        selectedElements = [];
+        btn.textContent = '🔗 Group';
+        btn.style.background = '';
+        disableElementSelection();
+        showNotification('Selection cancelled', 'info');
+    }
+}
+
+function enableElementSelection() {
+    const elements = document.querySelectorAll('.draggable-element');
+    
+    elements.forEach(element => {
+        element.addEventListener('click', selectElement);
+        element.style.cursor = 'pointer';
+    });
+}
+
+function disableElementSelection() {
+    const elements = document.querySelectorAll('.draggable-element');
+    
+    elements.forEach(element => {
+        element.removeEventListener('click', selectElement);
+        element.classList.remove('selected');
+        element.style.cursor = dragModeEnabled ? 'move' : 'default';
+    });
+    
+    selectedElements = [];
+}
+
+function selectElement(e) {
+    e.stopPropagation();
+    const element = e.target.closest('.draggable-element');
+    
+    if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        selectedElements = selectedElements.filter(el => el !== element);
+    } else {
+        element.classList.add('selected');
+        selectedElements.push(element);
+    }
+    
+    showNotification(`${selectedElements.length} element(s) selected`, 'info');
+}
+
+function groupElements() {
+    if (selectedElements.length < 2) {
+        showNotification('Select at least 2 elements to group', 'info');
+        return;
+    }
+    
+    const groupId = Date.now();
+    selectedElements.forEach(element => {
+        element.setAttribute('data-group', groupId);
+        element.classList.remove('selected');
+    });
+    
+    groupedElements.push({
+        id: groupId,
+        elements: [...selectedElements]
+    });
+    
+    showNotification(`${selectedElements.length} elements grouped!`, 'success');
+    selectedElements = [];
+}
+
+// Layer Control
+function bringToFront() {
+    const elements = document.querySelectorAll('.draggable-element.selected');
+    
+    if (elements.length === 0) {
+        showNotification('Select an element first (enable Group mode and click element)', 'info');
+        return;
+    }
+    
+    elements.forEach(element => {
+        element.style.zIndex = '100';
+    });
+    
+    showNotification('Element(s) brought to front', 'success');
+}
+
+function sendToBack() {
+    const elements = document.querySelectorAll('.draggable-element.selected');
+    
+    if (elements.length === 0) {
+        showNotification('Select an element first (enable Group mode and click element)', 'info');
+        return;
+    }
+    
+    elements.forEach(element => {
+        element.style.zIndex = '1';
+    });
+    
+    showNotification('Element(s) sent to back', 'success');
 }
 
 // Close modal when clicking outside

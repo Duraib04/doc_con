@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Report Generator - AI Document Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="website-report.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">📄 AI Doc Generator</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="ai-generator.html">AI Generator</a></li>
+                <li><a href="pdf-to-ppt.html">PDF to PPT</a></li>
+                <li><a href="website-report.html" class="active">Website Report</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="hero-section">
+            <h1>🌐 Website Report Generator</h1>
+            <p>Create professional industrial-style reports from any website</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="card">
+                <h2>Enter Website Details</h2>
+                <form id="websiteForm">
+                    <div class="form-group">
+                        <label for="websiteUrl">Website URL *</label>
+                        <input type="url" id="websiteUrl" placeholder="https://example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reportAuthor">Report Author *</label>
+                        <input type="text" id="reportAuthor" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="companyName">Company/Organization</label>
+                        <input type="text" id="companyName" placeholder="Optional">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reportPurpose">Report Purpose</label>
+                        <select id="reportPurpose">
+                            <option value="analysis">Website Analysis</option>
+                            <option value="audit">Technical Audit</option>
+                            <option value="review">Business Review</option>
+                            <option value="documentation">Documentation</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary">🔍 Analyze & Generate Report</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loadingSection" class="loading-section" style="display: none;">
+            <div class="card">
+                <div class="loading-spinner"></div>
+                <h3>Analyzing Website...</h3>
+                <p id="loadingStatus">Fetching website data</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div id="previewSection" class="preview-section" style="display: none;">
+            <div class="preview-actions">
+                <button class="btn-secondary" onclick="editReport()">✏️ Edit Details</button>
+                <button class="btn-primary" onclick="generatePDF()">📥 Download PDF Report</button>
+            </div>
+
+            <div class="report-preview" id="reportPreview">
+                <!-- Report content will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Document Generator. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="website-report.js"></script>
+</body>
+</html>

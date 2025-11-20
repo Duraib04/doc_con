@@ -656,6 +656,30 @@ function generateDocument() {
         }
         
         // Save the PDF
+        // If user requested SEO section and suggestions exist, add SEO page
+        if (documentConfig.contentSections && documentConfig.contentSections.includes('seo') && documentConfig.seoResults) {
+            doc.addPage();
+            let y = 20;
+            doc.setFontSize(18);
+            doc.setTextColor(...hexToRgb(documentConfig.accentColor));
+            doc.text('SEO Suggestions', pageWidth / 2, y, { align: 'center' });
+            y += 12;
+            doc.setFontSize(12);
+            doc.setTextColor(...hexToRgb(documentConfig.textColor));
+            documentConfig.seoResults.forEach(s => {
+                const lines = doc.splitTextToSize(s, maxWidth);
+                lines.forEach(line => {
+                    if (y > doc.internal.pageSize.getHeight() - 20) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.text(line, margin, y);
+                    y += 7;
+                });
+                y += 4;
+            });
+        }
+
         const fileName = `${selectedDocType}_${Date.now()}.pdf`;
         doc.save(fileName);
         
@@ -1129,6 +1153,19 @@ function initializeConfigHandlers() {
         fontFamily.addEventListener('change', function() {
             documentConfig.fontFamily = this.value;
         });
+
+        // SEO inputs
+        const seoKeywords = document.getElementById('seoKeywords');
+        const seoLevel = document.getElementById('seoLevel');
+        const generateSeoBtn = document.getElementById('generateSeoBtn');
+        if (generateSeoBtn) {
+            generateSeoBtn.addEventListener('click', function() {
+                const keywords = seoKeywords ? seoKeywords.value.split(',').map(k => k.trim()).filter(Boolean) : [];
+                const level = seoLevel ? seoLevel.value : 'basic';
+                documentConfig.seo = { keywords, level };
+                generateSeoSuggestions(documentConfig.seo);
+            });
+        }
     }
 
     // Line height selector
@@ -1167,6 +1204,62 @@ function closePreview() {
 function generateFromPreview() {
     closePreview();
     generateDocument();
+}
+
+// SEO Suggestion Generator
+function generateSeoSuggestions(seoConfig) {
+    const modal = document.getElementById('previewModal');
+    const preview = document.getElementById('documentPreview');
+    if (!seoConfig) return;
+
+    const keywords = seoConfig.keywords || [];
+    const level = seoConfig.level || 'basic';
+
+    // Simple heuristics to generate SEO suggestions (no external API required)
+    const suggestions = [];
+    if (keywords.length === 0) {
+        suggestions.push('No target keywords provided. Consider adding 3-7 focused keywords.');
+    } else {
+        suggestions.push(`Primary keywords: ${keywords.slice(0,3).join(', ')}`);
+        suggestions.push(`Keyword density suggestion: keep primary keywords ~1% across the document`);
+    }
+
+    if (level === 'basic') {
+        suggestions.push('Add a concise meta description (150-160 chars) summarizing the document.');
+        suggestions.push('Include primary keyword in the title and the first paragraph.');
+    } else if (level === 'detailed') {
+        suggestions.push('Structure content with H1, H2, and H3 headings using keywords naturally.');
+        suggestions.push('Add alt text for images and descriptive captions.');
+        suggestions.push('Create a summary table of key points and include internal links where relevant.');
+    } else if (level === 'audit') {
+        suggestions.push('Check page load speed, mobile usability, and fix any broken links.');
+        suggestions.push('Validate structured data and Open Graph tags for better sharing.');
+    }
+
+    // Attach seoResults to documentConfig for later inclusion
+    documentConfig.seoResults = suggestions;
+
+    // Show SEO suggestions in preview area
+    const seoHtml = `
+        <div class="report-page seo-section">
+            <div class="page-header"><h2>SEO Suggestions</h2><span class="page-number">SEO</span></div>
+            <div class="content-section">
+                <h3>Overview</h3>
+                <ul>
+                    ${suggestions.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            </div>
+        </div>`;
+
+    // Append or replace SEO section in preview
+    const existingSeo = preview.querySelector('.seo-section');
+    if (existingSeo) {
+        existingSeo.remove();
+    }
+    // Append SEO section at the end of preview
+    preview.insertAdjacentHTML('beforeend', seoHtml);
+
+    showNotification('SEO suggestions generated', 'success');
 }
 
 // Update the existing generateDocument function to use new config

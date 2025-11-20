@@ -61,6 +61,11 @@ async function analyzeWebsite(url) {
         generateUsageDocumentation(url);
         await delay(500);
         
+        // Step 5.5: Generate SEO suggestions for the website (basic heuristics)
+        updateProgress(92, 'Generating SEO suggestions...');
+        generateSeoForWebsite(url);
+        await delay(300);
+        
         // Step 6: Generate report preview
         updateProgress(100, 'Generating report...');
         await delay(500);
@@ -191,6 +196,27 @@ function generateUsageDocumentation(url) {
             'Transaction or interaction completion'
         ]
     };
+}
+
+// Generate simple SEO suggestions for website reports
+function generateSeoForWebsite(url) {
+    const domain = new URL(url).hostname;
+    const suggestions = [];
+
+    // Basic keyword extraction from domain and path
+    const parts = domain.split('.').filter(p => p && p !== 'www');
+    const baseKeywords = parts.slice(0, 2).join(' ');
+    suggestions.push(`Suggested primary keyword: ${baseKeywords}`);
+    suggestions.push('Add a concise meta description (150-160 chars) that includes the primary keyword.');
+    suggestions.push('Use structured headings (H1, H2, H3) and include keywords in at least one H2.');
+    suggestions.push('Ensure images have descriptive alt text and captions.');
+    suggestions.push('Verify mobile responsiveness and minimize large images to improve load speed.');
+
+    // Add more advanced recommendations
+    suggestions.push('Implement Open Graph tags for better sharing on social platforms.');
+    suggestions.push('Check for broken links and set up redirects for removed pages.');
+
+    websiteAnalysis.seoResults = suggestions;
 }
 
 // Generate report preview HTML
@@ -466,6 +492,22 @@ function generateReportPreview() {
                 <p><strong>Report Type:</strong> ${getPurposeLabel(reportData.purpose)}</p>
             </div>
         </div>
+        
+            ${websiteAnalysis.seoResults ? `
+            <!-- SEO Page -->
+            <div class="report-page">
+                <div class="page-header">
+                    <h2>SEO Suggestions</h2>
+                    <span class="page-number">SEO</span>
+                </div>
+                <div class="content-section">
+                    <h3>Overview</h3>
+                    <ul>
+                        ${websiteAnalysis.seoResults.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            ` : ''}
     `;
     
     preview.innerHTML = html;

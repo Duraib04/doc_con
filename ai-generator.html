@@ -161,6 +161,10 @@
                                     <span>Conclusion</span>
                                 </label>
                                 <label class="checkbox-label">
+                                    <input type="checkbox" name="content" value="seo">
+                                    <span>SEO Analysis</span>
+                                </label>
+                                <label class="checkbox-label">
                                     <input type="checkbox" name="content" value="references">
                                     <span>References</span>
                                 </label>
@@ -203,6 +207,26 @@
                                         <small>Technical specifications & metrics</small>
                                     </span>
                                 </label>
+                            </div>
+                        </div>
+
+                        <!-- SEO Settings -->
+                        <div class="config-card">
+                            <h3>🔎 SEO Settings</h3>
+                            <div class="form-group">
+                                <label for="seoKeywords">Target Keywords (comma separated)</label>
+                                <input type="text" id="seoKeywords" placeholder="e.g. document generation, pdf to ppt, ai report">
+                            </div>
+                            <div class="form-group">
+                                <label for="seoLevel">SEO Depth</label>
+                                <select id="seoLevel" class="style-select">
+                                    <option value="basic">Basic (meta tags + tips)</option>
+                                    <option value="detailed">Detailed (recommendations + headings)</option>
+                                    <option value="audit">Audit (technical + suggestions)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button id="generateSeoBtn" class="preview-btn">Generate SEO Suggestions</button>
                             </div>
                         </div>
 

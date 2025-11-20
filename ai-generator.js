@@ -20,6 +20,36 @@ let documentConfig = {
     lineHeight: '1.5'
 };
 
+// Default keywords (normalized) used across SEO suggestions and in-app search
+const DEFAULT_SEARCH_KEYWORDS = [
+    'pdf ai',
+    'durai pdf',
+    'pdf converter',
+    'website report',
+    'pdf to ppt',
+    'pdf to ppt converter',
+    'text to file converter',
+    'text to pdf converter',
+    'text to doc converter',
+    'text to document converter',
+    'text to rich text file converter'
+];
+
+// Map search phrases to UI targets/pages
+const SEARCH_SUGGESTIONS_MAP = {
+    'pdf ai': { label: 'AI Document Generator', href: 'ai-generator.html' },
+    'durai pdf': { label: 'AI Document Generator', href: 'ai-generator.html' },
+    'pdf converter': { label: 'PDF to PPT / Converters', href: 'pdf-to-ppt.html' },
+    'website report': { label: 'Website Report Generator', href: 'website-report.html' },
+    'pdf to ppt': { label: 'PDF to PPT Converter', href: 'pdf-to-ppt.html' },
+    'pdf to ppt converter': { label: 'PDF to PPT Converter', href: 'pdf-to-ppt.html' },
+    'text to file converter': { label: 'Text → Document tools', href: 'ai-generator.html' },
+    'text to pdf converter': { label: 'Export to PDF', href: 'ai-generator.html' },
+    'text to doc converter': { label: 'Export to DOC', href: 'ai-generator.html' },
+    'text to document converter': { label: 'Export to Document', href: 'ai-generator.html' },
+    'text to rich text file converter': { label: 'Rich Text / Formatting', href: 'ai-generator.html' }
+};
+
 // Document Templates
 const templates = {
     permission: [
@@ -233,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     initializeColorPicker();
     initializeFontSelect();
+    setupSearch();
 });
 
 function setupEventListeners() {
@@ -1160,7 +1191,7 @@ function initializeConfigHandlers() {
         const generateSeoBtn = document.getElementById('generateSeoBtn');
         if (generateSeoBtn) {
             generateSeoBtn.addEventListener('click', function() {
-                const keywords = seoKeywords ? seoKeywords.value.split(',').map(k => k.trim()).filter(Boolean) : [];
+                    const keywords = seoKeywords ? seoKeywords.value.split(',').map(k => k.trim()).filter(Boolean) : [];
                 const level = seoLevel ? seoLevel.value : 'basic';
                 documentConfig.seo = { keywords, level };
                 generateSeoSuggestions(documentConfig.seo);
@@ -1215,12 +1246,15 @@ function generateSeoSuggestions(seoConfig) {
     const keywords = seoConfig.keywords || [];
     const level = seoConfig.level || 'basic';
 
+    // If no keywords provided, use the normalized default keywords
+    const effectiveKeywords = keywords.length ? keywords : DEFAULT_SEARCH_KEYWORDS.slice(0, 5);
+
     // Simple heuristics to generate SEO suggestions (no external API required)
     const suggestions = [];
-    if (keywords.length === 0) {
+    if (effectiveKeywords.length === 0) {
         suggestions.push('No target keywords provided. Consider adding 3-7 focused keywords.');
     } else {
-        suggestions.push(`Primary keywords: ${keywords.slice(0,3).join(', ')}`);
+        suggestions.push(`Primary keywords: ${effectiveKeywords.slice(0,3).join(', ')}`);
         suggestions.push(`Keyword density suggestion: keep primary keywords ~1% across the document`);
     }
 
@@ -1260,6 +1294,50 @@ function generateSeoSuggestions(seoConfig) {
     preview.insertAdjacentHTML('beforeend', seoHtml);
 
     showNotification('SEO suggestions generated', 'success');
+}
+
+// In-app search / suggestions
+function setupSearch() {
+    const input = document.getElementById('siteSearch');
+    const container = document.getElementById('searchSuggestions');
+    if (!input || !container) return;
+
+    function clearSuggestions() {
+        container.innerHTML = '';
+        container.style.display = 'none';
+        container.setAttribute('aria-hidden', 'true');
+    }
+
+    input.addEventListener('input', function() {
+        const q = this.value.trim().toLowerCase();
+        container.innerHTML = '';
+        if (!q) { clearSuggestions(); return; }
+
+        const matches = DEFAULT_SEARCH_KEYWORDS.filter(k => k.includes(q) || q.includes(k) || k.split(' ').some(w => w.startsWith(q)) ).slice(0,6);
+        if (matches.length === 0) { clearSuggestions(); return; }
+
+        matches.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'search-suggestion-item';
+            const map = SEARCH_SUGGESTIONS_MAP[m] || { label: m, href: 'ai-generator.html' };
+            item.innerHTML = `<strong>${map.label}</strong><div class="hint">${m}</div>`;
+            item.addEventListener('click', () => {
+                // navigate to the mapped page
+                if (map.href) window.location.href = map.href;
+            });
+            container.appendChild(item);
+        });
+
+        container.style.display = 'block';
+        container.setAttribute('aria-hidden', 'false');
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !container.contains(e.target)) {
+            clearSuggestions();
+        }
+    });
 }
 
 // Update the existing generateDocument function to use new config

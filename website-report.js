@@ -3,6 +3,21 @@
 let reportData = {};
 let websiteAnalysis = {};
 
+// Default keywords used by report SEO generator when none provided
+const DEFAULT_SEARCH_KEYWORDS = [
+    'pdf ai',
+    'durai pdf',
+    'pdf converter',
+    'website report',
+    'pdf to ppt',
+    'pdf to ppt converter',
+    'text to file converter',
+    'text to pdf converter',
+    'text to doc converter',
+    'text to document converter',
+    'text to rich text file converter'
+];
+
 // Form submission
 document.getElementById('websiteForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -215,6 +230,9 @@ function generateSeoForWebsite(url) {
     // Add more advanced recommendations
     suggestions.push('Implement Open Graph tags for better sharing on social platforms.');
     suggestions.push('Check for broken links and set up redirects for removed pages.');
+
+    // If no custom keywords are present, recommend the normalized defaults
+    suggestions.unshift(`Recommended keywords to target: ${DEFAULT_SEARCH_KEYWORDS.slice(0,5).join(', ')}`);
 
     websiteAnalysis.seoResults = suggestions;
 }

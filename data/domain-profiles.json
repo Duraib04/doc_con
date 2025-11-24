@@ -1,0 +1,126 @@
+{
+  "google": {
+    "gettingStarted": [
+      "Open the site and use the search box to perform queries",
+      "Sign in with a Google account to access personalized features (Gmail, Drive, Maps, YouTube)",
+      "Use the apps menu to access services like News, Maps, and Drive"
+    ],
+    "mainFeatures": [
+      "Search results with featured snippets and knowledge panels",
+      "Personalized recommendations and search history",
+      "Integrated services: Gmail, Drive, Maps, YouTube, Photos, Calendar",
+      "Voice search and mobile-optimized results",
+      "Local results, maps, and business listings"
+    ],
+    "bestPractices": [
+      "Use clear, concise search queries to get relevant results",
+      "Sign in to synchronize preferences across devices",
+      "Enable two-factor authentication for account security",
+      "Use filters (News, Images, Videos, Maps) to refine results",
+      "Review privacy settings for personalized content control"
+    ],
+    "targetAudience": "General public searching for information, businesses managing local listings, and developers using Google APIs",
+    "useCases": [
+      "Quick web searches and fact-finding",
+      "Accessing email via Gmail and files via Drive",
+      "Using Maps for directions and local business info",
+      "Watching and sharing videos on YouTube",
+      "Using Google Workspace for collaboration"
+    ]
+  },
+  "youtube": {
+    "gettingStarted": [
+      "Browse the site for trending videos or search for specific channels/content",
+      "Sign in to subscribe to channels and save playlists",
+      "Use recommended feed and explore categories for discovery"
+    ],
+    "mainFeatures": [
+      "Video streaming with adaptive quality",
+      "Recommendations based on watch history",
+      "Channel subscriptions, comments, and playlists",
+      "Live streaming and premieres"
+    ],
+    "bestPractices": [
+      "Use descriptive search terms and filters (Upload date, Type, Duration)",
+      "Subscribe and enable notifications for channels you follow",
+      "Use playlists to organize content"
+    ],
+    "targetAudience": "Viewers, creators, and advertisers",
+    "useCases": [
+      "Consume video content for education and entertainment",
+      "Publish videos and grow an audience",
+      "Advertise to targeted demographics"
+    ]
+  },
+  "amazon": {
+    "gettingStarted": [
+      "Search products on the site and use filters to narrow results",
+      "Create an account to purchase, review, and track orders",
+      "Use wishlists and saved items for later purchase"
+    ],
+    "mainFeatures": [
+      "Product listings with ratings and reviews",
+      "Personalized recommendations and deals",
+      "Order management, shipping, and return flows",
+      "Seller dashboards and marketplaces"
+    ],
+    "bestPractices": [
+      "Read product reviews and check seller ratings",
+      "Use filters and sort by price or review score",
+      "Monitor deals and apply coupons when available"
+    ],
+    "targetAudience": "Shoppers, sellers, and enterprise buyers",
+    "useCases": [
+      "Find and buy products",
+      "Manage seller listings and inventory",
+      "Research pricing and availability"
+    ]
+  },
+  "github": {
+    "gettingStarted": [
+      "Browse repositories or search by topic",
+      "Sign in to star repositories, fork, and contribute via pull requests",
+      "Use Issues and Discussions to engage with projects"
+    ],
+    "mainFeatures": [
+      "Source code hosting and version control",
+      "Issue tracking and project boards",
+      "Pull requests and code reviews",
+      "Actions for CI/CD"
+    ],
+    "bestPractices": [
+      "Follow contribution guidelines before submitting pull requests",
+      "Use descriptive commit messages and PR descriptions",
+      "Protect main branches with required reviews"
+    ],
+    "targetAudience": "Developers, maintainers, and DevOps teams",
+    "useCases": [
+      "Collaborative software development",
+      "Open source project discovery",
+      "CI/CD automation and package releases"
+    ]
+  },
+  "wikipedia": {
+    "gettingStarted": [
+      "Search for encyclopedia entries",
+      "Use language selector for localized content",
+      "Review references and external links for primary sources"
+    ],
+    "mainFeatures": [
+      "Comprehensive encyclopedia-style articles",
+      "Community-edited content with revision history",
+      "Extensive interlinking between topics"
+    ],
+    "bestPractices": [
+      "Cross-check facts via cited sources",
+      "Use the revision history to view changes",
+      "Contribute improvements following citation policies"
+    ],
+    "targetAudience": "Researchers, students, and general readers",
+    "useCases": [
+      "Quick fact lookup",
+      "Background research",
+      "Reference checking"
+    ]
+  }
+}

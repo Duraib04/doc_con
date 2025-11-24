@@ -24,6 +24,11 @@
                 <a href="website-report.html">Website Report</a>
                 <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
+                <div class="nav-search" style="display:inline-block;position:relative;margin:0 10px">
+                    <input id="siteSearch" type="search" placeholder="Search..." style="padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;width:180px" />
+                    <div id="searchSuggestions" class="search-suggestions" style="display:none;position:absolute;top:100%;left:0;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);margin-top:4px;min-width:250px;z-index:1000"></div>
+                </div>
+                <button id="themeToggle" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;cursor:pointer">🌓 Theme</button>
             </nav>
         </header>
 
@@ -186,6 +191,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.js"></script>
+    <script src="theme.js"></script>
+    <script src="search.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

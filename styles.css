@@ -32,6 +32,67 @@ body {
     line-height: 1.6;
 }
 
+/* Dark Mode Base */
+body.dark-mode {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+body.dark-mode header nav a { color: #cbd5e1; }
+body.dark-mode .converter-container,
+body.dark-mode .feature-card,
+body.dark-mode .about-content,
+body.dark-mode .contact-info,
+body.dark-mode .contact-form-container,
+body.dark-mode textarea,
+body.dark-mode .format-card,
+body.dark-mode .value-item,
+body.dark-mode .mission-card,
+body.dark-mode .converter-container .format-card,
+body.dark-mode .format-option input[type="radio"]:checked + .format-card {
+    background: #1e293b !important;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+body.dark-mode .format-option input[type="radio"]:checked + .format-card { box-shadow: 0 0 0 3px rgba(99,102,241,0.4); }
+body.dark-mode textarea { border-color:#334155; }
+body.dark-mode .feature-card { border-color: rgba(255,255,255,0.15); }
+body.dark-mode .feature-card p { color:#cbd5e1; }
+body.dark-mode .feature-card h3 { color:#fff; }
+body.dark-mode .brand { color:#fff; }
+body.dark-mode nav a:hover { opacity: .85; }
+body.dark-mode .convert-btn { box-shadow: 0 8px 20px -4px rgba(0,0,0,0.6); }
+body.dark-mode .convert-btn:hover { box-shadow: 0 10px 24px -4px rgba(0,0,0,0.7); }
+body.dark-mode .format-card:hover { border-color:#6366f1; }
+body.dark-mode .value-item { border-left-color:#6366f1; }
+body.dark-mode .mission-card { background: linear-gradient(135deg,#1e293b,#334155 60%,#475569); }
+body.dark-mode .mission-card p { color:#f1f5f9; }
+body.dark-mode .contact-item { background:#1e293b; border-left-color:#6366f1; }
+body.dark-mode .contact-details h3 { color:#e2e8f0; }
+body.dark-mode .contact-details p { color:#cbd5e1; }
+body.dark-mode .contact-details a { color:#818cf8; }
+body.dark-mode .contact-item:hover { box-shadow: 0 4px 12px -1px rgba(0,0,0,0.6); }
+body.dark-mode .submit-btn { box-shadow: 0 6px 16px -2px rgba(0,0,0,0.6); }
+body.dark-mode .submit-btn:hover { box-shadow: 0 8px 24px -2px rgba(0,0,0,0.7); }
+body.dark-mode .converter-container { box-shadow: 0 20px 40px -10px rgba(0,0,0,0.7); }
+body.dark-mode footer { border-top-color:#334155; }
+body.dark-mode .feature-grid .feature-card { backdrop-filter:none; }
+body.dark-mode .hero h1, body.dark-mode .subtitle { color:#f1f5f9; }
+body.dark-mode .about-section h2, body.dark-mode .contact-info h2, body.dark-mode .contact-form-container h2 { color:#818cf8; }
+body.dark-mode .about-section p, body.dark-mode .contact-info p { color:#cbd5e1; }
+body.dark-mode .value-item p { color:#cbd5e1; }
+body.dark-mode .stats-section { background: linear-gradient(135deg,#1e293b,#334155,#475569); }
+body.dark-mode .stats-section .stat-number { color:#fff; }
+body.dark-mode .stats-section .stat-label { color:#cbd5e1; }
+body.dark-mode .cta-section { background:#1e293b; }
+body.dark-mode .cta-section h2 { color:#fff; }
+body.dark-mode .cta-section p { color:#cbd5e1; }
+body.dark-mode .btn { background:#334155; color:#e2e8f0; }
+body.dark-mode .btn-primary { background: linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; }
+body.dark-mode .btn-primary:hover { filter:brightness(1.1); }
+body.dark-mode .format-name { color:#e2e8f0; }
+body.dark-mode .format-desc { color:#94a3b8; }
+body.dark-mode .character-count { color:#94a3b8; }
+
 .container {
     max-width: 1400px;
     margin: 0 auto;

@@ -16,7 +16,13 @@
             <li><a href="about.html">About</a></li>
             <li><a href="ai-generator.html">AI Generator</a></li>
             <li><a href="pdf-to-ppt.html" class="active">PDF to PPT</a></li>
+            <li><a href="website-report.html">Website Report</a></li>
             <li><a href="contact.html">Contact</a></li>
+            <li><div class="nav-search" style="display:inline-block;position:relative;margin:0 10px">
+                <input id="siteSearch" type="search" placeholder="Search..." style="padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;width:180px" />
+                <div id="searchSuggestions" class="search-suggestions" style="display:none;position:absolute;top:100%;left:0;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);margin-top:4px;min-width:250px;z-index:1000"></div>
+            </div></li>
+            <li><button id="themeToggle" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;cursor:pointer">🌓 Theme</button></li>
         </ul>
     </nav>
 
@@ -122,6 +128,8 @@
         <p>&copy; 2024 Doc Converter. All rights reserved.</p>
     </footer>
 
+    <script src="theme.js"></script>
+    <script src="search.js"></script>
     <script src="pdf-to-ppt.js"></script>
 </body>
 </html>

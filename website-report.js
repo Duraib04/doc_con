@@ -2,6 +2,7 @@
 
 let reportData = {};
 let websiteAnalysis = {};
+let domainProfiles = null; // Loaded external domain usage profiles
 
 // Default keywords used by report SEO generator when none provided
 const DEFAULT_SEARCH_KEYWORDS = [
@@ -41,6 +42,110 @@ document.getElementById('websiteForm').addEventListener('submit', async function
     
     await analyzeWebsite(url);
 });
+
+// Initialize page (load domain profiles)
+document.addEventListener('DOMContentLoaded', () => {
+    loadDomainProfiles();
+    setupUsageExportImport();
+});
+
+function loadDomainProfiles() {
+    fetch('data/domain-profiles.json')
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { domainProfiles = data; })
+        .catch(() => { domainProfiles = null; });
+}
+
+function extractDomainKey(domain) {
+    const parts = domain.toLowerCase().split('.').filter(p => p !== 'www');
+    // take last two parts if more than 2, else first
+    if (parts.length >= 2) {
+        // common TLD removal
+        const tlds = ['com','net','org','io','dev','app','in'];
+        if (tlds.includes(parts[parts.length - 1]) && parts.length > 2) {
+            return parts[parts.length - 2];
+        }
+        return parts[0];
+    }
+    return parts[0] || domain.toLowerCase();
+}
+
+function setupUsageExportImport() {
+    const exportBtn = document.getElementById('exportUsageBtn');
+    const importBtn = document.getElementById('importUsageBtn');
+    const importFile = document.getElementById('importUsageFile');
+    if (exportBtn) exportBtn.addEventListener('click', exportUsageProfile);
+    if (importBtn) importBtn.addEventListener('click', () => importFile && importFile.click());
+    if (importFile) importFile.addEventListener('change', handleUsageImport);
+}
+
+function exportUsageProfile() {
+    if (!websiteAnalysis.domain || !websiteAnalysis.usage) {
+        alert('No usage data to export yet. Generate a report first.');
+        return;
+    }
+    const payload = {
+        domain: websiteAnalysis.domain,
+        usage: websiteAnalysis.usage,
+        exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `usage-profile-${websiteAnalysis.domain}.json`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        URL.revokeObjectURL(a.href);
+        a.remove();
+    }, 0);
+}
+
+function handleUsageImport(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (!data.usage || typeof data.usage !== 'object') {
+                throw new Error('Invalid usage JSON structure');
+            }
+            // Optional domain check
+            if (data.domain && websiteAnalysis.domain && data.domain !== websiteAnalysis.domain) {
+                if (!confirm(`Imported domain (${data.domain}) differs from current (${websiteAnalysis.domain}). Apply anyway?`)) {
+                    return;
+                }
+            }
+            websiteAnalysis.usage = data.usage;
+            persistUsageProfile();
+            generateReportPreview();
+            alert('Usage profile imported.');
+        } catch(err) {
+            alert('Failed to import JSON: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+}
+
+function persistUsageProfile() {
+    if (websiteAnalysis.domain && websiteAnalysis.usage) {
+        try {
+            localStorage.setItem(`usageProfile:${websiteAnalysis.domain}`, JSON.stringify(websiteAnalysis.usage));
+        } catch(_) {}
+    }
+}
+
+function loadPersistedUsage(domain) {
+    try {
+        const raw = localStorage.getItem(`usageProfile:${domain}`);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch(_) { return null; }
+}
+
+
 
 // Analyze website and generate report
 async function analyzeWebsite(url) {
@@ -223,6 +328,11 @@ function generateUsageDocumentation(url) {
 // Return a tailored usage object for known domains. Keeps recommendations realistic but heuristic.
 function generateUsageForDomain(domain, url) {
     const d = domain.toLowerCase();
+    // External domain profiles take precedence if loaded
+    const key = extractDomainKey(domain);
+    if (domainProfiles && domainProfiles[key]) {
+        return JSON.parse(JSON.stringify(domainProfiles[key])); // clone
+    }
     // Google family
     if (d.includes('google')) {
         return {
@@ -915,6 +1025,7 @@ function onSaveUsageClick(e) {
     });
 
     // Re-render preview to reflect saved edits
+    persistUsageProfile();
     generateReportPreview();
 }
 

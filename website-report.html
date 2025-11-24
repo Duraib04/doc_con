@@ -16,6 +16,7 @@
     <nav>
         <div class="nav-container">
             <div class="logo">📄 AI Doc Generator</div>
+            <button id="themeToggle" style="margin-left:auto" class="btn-secondary">🌓 Theme</button>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="ai-generator.html">AI Generator</a></li>
@@ -87,6 +88,9 @@
             <div class="preview-actions">
                 <button class="btn-secondary" onclick="editReport()">✏️ Edit Details</button>
                 <button class="btn-primary" onclick="generatePDF()">📥 Download PDF Report</button>
+                <button class="btn-secondary" id="exportUsageBtn">⬇️ Export Usage JSON</button>
+                <button class="btn-secondary" id="importUsageBtn">⬆️ Import Usage JSON</button>
+                <input id="importUsageFile" type="file" accept="application/json" style="display:none" />
             </div>
 
             <div class="report-preview" id="reportPreview">

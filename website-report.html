@@ -30,9 +30,48 @@
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Quick Features Section -->
+        <div class="quick-features" style="display:flex;gap:1rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap">
+            <div class="quick-feature-card" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:1rem 1.5rem;border-radius:12px;text-align:center;min-width:150px;box-shadow:0 4px 15px rgba(102,126,234,0.3)">
+                <div style="font-size:2rem;margin-bottom:0.3rem">⚡</div>
+                <div style="font-weight:700;font-size:0.9rem">Fast Analysis</div>
+                <div style="font-size:0.75rem;opacity:0.9">Under 30 seconds</div>
+            </div>
+            <div class="quick-feature-card" style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:1rem 1.5rem;border-radius:12px;text-align:center;min-width:150px;box-shadow:0 4px 15px rgba(240,147,251,0.3)">
+                <div style="font-size:2rem;margin-bottom:0.3rem">🎨</div>
+                <div style="font-weight:700;font-size:0.9rem">4 Templates</div>
+                <div style="font-size:0.75rem;opacity:0.9">Customizable styles</div>
+            </div>
+            <div class="quick-feature-card" style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;padding:1rem 1.5rem;border-radius:12px;text-align:center;min-width:150px;box-shadow:0 4px 15px rgba(79,172,254,0.3)">
+                <div style="font-size:2rem;margin-bottom:0.3rem">📊</div>
+                <div style="font-weight:700;font-size:0.9rem">Deep Insights</div>
+                <div style="font-size:0.75rem;opacity:0.9">SEO & Technical</div>
+            </div>
+        </div>
+
         <div class="hero-section">
             <h1>🌐 Website Report Generator</h1>
             <p>Create professional industrial-style reports from any website</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="reportCount">1,247</div>
+                    <div class="stat-label">Reports Generated</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label">Report Templates</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">< 30s</div>
+                    <div class="stat-label">Average Generation</div>
+                </div>
+            </div>
+            <div class="feature-badges">
+                <span class="badge">✨ AI-Powered</span>
+                <span class="badge">📊 Professional Design</span>
+                <span class="badge">🚀 Fast Export</span>
+                <span class="badge">🔒 Secure & Private</span>
+            </div>
         </div>
 
         <!-- Input Section -->
@@ -64,6 +103,31 @@
                             <option value="documentation">Documentation</option>
                             <option value="other">Other</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reportTemplate">Report Template</label>
+                        <select id="reportTemplate">
+                            <option value="professional">📊 Professional (Default)</option>
+                            <option value="minimal">📄 Minimal Clean</option>
+                            <option value="detailed">📚 Detailed Analysis</option>
+                            <option value="executive">💼 Executive Summary</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="analysisDepth">Analysis Depth</label>
+                        <div class="range-input-group">
+                            <input type="range" id="analysisDepth" min="1" max="3" value="2" step="1">
+                            <span id="analysisDepthValue" class="range-value">Standard</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="includeScreenshots" checked>
+                            Include visual mockups and charts
+                        </label>
                     </div>
 
                     <button type="submit" class="btn-primary">🔍 Analyze & Generate Report</button>

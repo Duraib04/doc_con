@@ -28,11 +28,18 @@ document.getElementById('websiteForm').addEventListener('submit', async function
     const company = document.getElementById('companyName').value;
     const purpose = document.getElementById('reportPurpose').value;
     
+    const template = document.getElementById('reportTemplate')?.value || 'professional';
+    const depth = document.getElementById('analysisDepth')?.value || '2';
+    const includeScreenshots = document.getElementById('includeScreenshots')?.checked ?? true;
+    
     reportData = {
         url: url,
         author: author,
         company: company,
         purpose: purpose,
+        template: template,
+        analysisDepth: depth,
+        includeScreenshots: includeScreenshots,
         date: new Date().toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long', 
@@ -47,7 +54,38 @@ document.getElementById('websiteForm').addEventListener('submit', async function
 document.addEventListener('DOMContentLoaded', () => {
     loadDomainProfiles();
     setupUsageExportImport();
+    setupRangeSliders();
+    animateReportCounter();
 });
+
+function setupRangeSliders() {
+    const depthSlider = document.getElementById('analysisDepth');
+    const depthValue = document.getElementById('analysisDepthValue');
+    if (depthSlider && depthValue) {
+        const labels = ['Basic', 'Standard', 'Deep Analysis'];
+        depthSlider.addEventListener('input', (e) => {
+            depthValue.textContent = labels[e.target.value - 1];
+        });
+    }
+}
+
+function animateReportCounter() {
+    const counter = document.getElementById('reportCount');
+    if (!counter) return;
+    const target = 1247;
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            counter.textContent = target.toLocaleString();
+            clearInterval(timer);
+        } else {
+            counter.textContent = Math.floor(current).toLocaleString();
+        }
+    }, 16);
+}
 
 function loadDomainProfiles() {
     fetch('data/domain-profiles.json')
@@ -644,9 +682,10 @@ function generateSeoForWebsite(url) {
 function generateReportPreview() {
     const preview = document.getElementById('reportPreview');
     
+    const templateClass = reportData.template || 'professional';
     const html = `
         <!-- Cover Page -->
-        <div class="report-cover">
+        <div class="report-cover template-${templateClass}">
             <h1>Website Analysis Report</h1>
             <div class="website-url">${reportData.url}</div>
             

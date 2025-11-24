@@ -13,18 +13,44 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav>
+    <nav class="enhanced-nav">
         <div class="nav-container">
-            <div class="logo">📄 AI Doc Generator</div>
-            <button id="themeToggle" style="margin-left:auto" class="btn-secondary">🌓 Theme</button>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="ai-generator.html">AI Generator</a></li>
-                <li><a href="pdf-to-ppt.html">PDF to PPT</a></li>
-                <li><a href="website-report.html" class="active">Website Report</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
+            <div class="nav-brand">
+                <div class="logo-wrapper">
+                    <span class="logo-icon">📄</span>
+                    <div class="logo-text">
+                        <span class="brand-name">AI Doc Generator</span>
+                        <span class="brand-tagline">Professional Reports</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+                    <li><a href="ai-generator.html"><span class="nav-icon">✨</span> AI Generator</a></li>
+                    <li><a href="pdf-to-ppt.html"><span class="nav-icon">📊</span> PDF to PPT</a></li>
+                    <li><a href="website-report.html" class="active"><span class="nav-icon">🌐</span> Website Report</a></li>
+                    <li><a href="about.html"><span class="nav-icon">ℹ️</span> About</a></li>
+                    <li><a href="contact.html"><span class="nav-icon">📧</span> Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-actions">
+                <div class="nav-search" style="position:relative;margin-right:1rem">
+                    <input id="siteSearch" type="search" placeholder="Search..." style="padding:8px 35px 8px 12px;border-radius:20px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:#fff;width:180px;font-size:0.9rem" />
+                    <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none">🔍</span>
+                    <div id="searchSuggestions" class="search-suggestions" style="display:none;position:absolute;top:100%;right:0;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);margin-top:8px;min-width:280px;z-index:1000;overflow:hidden"></div>
+                </div>
+                <button id="themeToggle" class="theme-btn" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌓</span>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -178,5 +204,23 @@
     </footer>
 
     <script src="website-report.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
+            document.querySelector('.nav-center')?.classList.toggle('active');
+            this.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.enhanced-nav');
+            const menu = document.querySelector('.nav-center');
+            const toggle = document.getElementById('mobileMenuToggle');
+            if (menu?.classList.contains('active') && !nav?.contains(e.target)) {
+                menu.classList.remove('active');
+                toggle?.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>

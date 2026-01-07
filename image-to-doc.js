@@ -79,29 +79,47 @@
       overlayContainer.innerHTML = '';
       textBoxes = [];
       const lines = data?.lines || [];
+      
+      if (!lines || lines.length === 0) {
+        setStatus('No text detected in image. Try a clearer image.');
+        return;
+      }
+      
+      console.log(`OCR detected ${lines.length} lines`);
+      
       lines.forEach((line, idx) => {
         const { bbox, text } = line;
         if (!text || !text.trim()) return;
         
+        // Calculate positions and dimensions
+        const x = bbox.x0 * scaleX;
+        const y = bbox.y0 * scaleY;
+        const width = Math.max(60, (bbox.x1 - bbox.x0) * scaleX);
+        const height = Math.max(24, (bbox.y1 - bbox.y0) * scaleY);
+        const calculatedFontSize = Math.max(12, Math.min(20, (bbox.y1 - bbox.y0) * scaleY * 0.8));
+        
         const boxData = {
           id: 'box-' + idx,
-          text: text,
-          x: bbox.x0 * scaleX,
-          y: bbox.y0 * scaleY,
-          width: Math.max(60, (bbox.x1 - bbox.x0) * scaleX),
-          height: Math.max(24, (bbox.y1 - bbox.y0) * scaleY),
-          fontFamily: 'Inter',
-          fontSize: Math.max(12, Math.min(20, (bbox.y1 - bbox.y0) * scaleY * 0.8)),
+          text: text.trim(),
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          fontFamily: 'Arial',
+          fontSize: calculatedFontSize,
           bold: false,
           italic: false,
           underline: false,
           color: '#000000'
         };
+        
+        console.log(`Creating text box ${idx}:`, boxData);
         textBoxes.push(boxData);
         createTextBoxElement(boxData);
       });
       
-      setStatus(`Extracted ${textBoxes.length} text regions. Click to select and edit.`);
+      console.log(`Created ${textBoxes.length} text boxes`);
+      setStatus(`✓ Extracted ${textBoxes.length} text regions. Click to select and edit.`);
     } catch (err) {
       console.error(err);
       setStatus('OCR failed. Please try again.');
@@ -112,6 +130,8 @@
 
   // Create draggable/resizable text box element
   function createTextBoxElement(boxData) {
+    console.log('Creating text box element:', boxData.id);
+    
     const box = document.createElement('div');
     box.className = 'text-box';
     box.dataset.id = boxData.id;
@@ -133,6 +153,10 @@
     content.addEventListener('input', (e) => {
       boxData.text = e.target.textContent;
     });
+    // Prevent drag when editing text
+    content.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+    });
     box.appendChild(content);
 
     // Resize handles
@@ -143,17 +167,21 @@
       box.appendChild(handle);
     });
 
+    // Drag functionality
     box.addEventListener('mousedown', (e) => {
       if (e.target.classList.contains('resize-handle')) return;
-      if (e.target === content) return;
+      if (e.target.classList.contains('text-box-content')) return;
       startDrag(e, boxData);
     });
 
+    // Selection functionality
     box.addEventListener('click', (e) => {
+      e.stopPropagation();
       selectBox(boxData);
     });
 
     overlayContainer.appendChild(box);
+    console.log('Text box element created and appended:', boxData.id);
   }
 
   // Select a text box

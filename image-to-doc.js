@@ -69,20 +69,23 @@
 
   runOcrBtn.addEventListener('click', runOCR);
 
-  // Export edited text to DOCX using html-docx-js
+  // Export edited text to DOCX using html-docx-js (with .doc fallback)
   exportDocxBtn.addEventListener('click', () => {
-    const html = `<html><head><meta charset="utf-8"></head><body><div>${escapeHtml(ocrText.innerHTML)}</div></body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Extracted Text</title></head><body><div style="white-space:pre-wrap;">${(ocrText.innerHTML || '').replace(/\n/g, '<br/>')}</div></body></html>`;
     try {
-      const blob = window.HTMLDocx?.fromHTML ? HTMLDocx.fromHTML(html) : null;
+      const blob = (window.htmlDocx && typeof window.htmlDocx.asBlob === 'function') ? window.htmlDocx.asBlob(html) : null;
       if (blob) {
         saveAs(blob, 'extracted-text.docx');
         setStatus('DOCX exported successfully.');
       } else {
-        setStatus('DOCX export library not available.');
+        // Fallback: export as legacy .doc using HTML
+        const docBlob = new Blob([html], { type: 'application/msword' });
+        saveAs(docBlob, 'extracted-text.doc');
+        setStatus('DOCX library not found; exported as .DOC instead.');
       }
     } catch (err) {
       console.error(err);
-      setStatus('Failed to export DOCX.');
+      setStatus('Failed to export document.');
     }
   });
 

@@ -2,40 +2,133 @@
   margin-top: 24px;
 }
 
-.image-doc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+/* Upload Panel */
+.upload-panel {
+  background: rgba(255,255,255,0.08);
+  border: 2px dashed rgba(255,255,255,0.3);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  margin-bottom: 24px;
 }
 
-.panel {
+.upload-panel input[type="file"] {
+  margin-bottom: 16px;
+}
+
+.upload-panel button {
+  margin-top: 12px;
+}
+
+.status {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* Visual Editor */
+.visual-editor {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 16px;
   padding: 16px;
 }
 
-.panel .box-header h2 {
-  margin: 0 0 8px 0;
+/* Toolbar */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
-#imageInput {
-  margin: 8px 0 16px 0;
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.canvas-wrapper {
+.toolbar-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color, #fff);
+}
+
+.toolbar-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: var(--text-color, #fff);
+  font-size: 0.9rem;
+}
+
+.toolbar-input {
+  width: 60px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: var(--text-color, #fff);
+  font-size: 0.9rem;
+}
+
+.toolbar-color {
+  width: 40px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+}
+
+.toolbar-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: var(--text-color, #fff);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.toolbar-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.toolbar-btn.active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.toolbar-btn.danger {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.toolbar-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* Canvas Editor */
+.canvas-editor-wrapper {
   position: relative;
   width: 100%;
-  min-height: 320px;
+  min-height: 500px;
   border-radius: 12px;
-  overflow: hidden;
-  background: rgba(0,0,0,0.15);
+  overflow: auto;
+  background: rgba(0,0,0,0.2);
 }
 
 .canvas-stack {
   position: relative;
-  width: 100%;
-  height: 100%;
+  display: inline-block;
+  min-width: 100%;
 }
 
 #imageCanvas {
@@ -45,85 +138,119 @@
 
 .overlay-container {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
-.overlay-box {
+/* Text Box */
+.text-box {
   position: absolute;
-  border: 1px dashed rgba(37, 99, 235, 0.7);
-  background: rgba(37, 99, 235, 0.12);
-  color: var(--text-color, #fff);
-  font: 16px/1.2 "Inter", Arial, sans-serif;
-  padding: 2px 4px;
-  border-radius: 6px;
+  border: 2px solid transparent;
+  background: rgba(37, 99, 235, 0.1);
+  padding: 4px;
+  cursor: move;
+  pointer-events: auto;
+  user-select: none;
+  min-width: 40px;
+  min-height: 24px;
+  box-sizing: border-box;
+  transition: all 0.15s;
+}
+
+.text-box:hover {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.5);
+}
+
+.text-box.selected {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+}
+
+.text-box-content {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  border: none;
+  padding: 2px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #2563eb;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
   pointer-events: auto;
 }
 
-.overlay-box:focus {
-  outline: 2px solid #60a5fa;
-  background: rgba(37,99,235,0.18);
+.text-box.selected .resize-handle {
+  opacity: 1;
 }
 
-.editable-text {
-  min-height: 320px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.15);
-  padding: 12px;
-  background: rgba(255,255,255,0.06);
-  color: var(--text-color, #fff);
-  white-space: pre-wrap;
-}
+.resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+.resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+.resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+.resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
 
-.status {
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-  opacity: 0.8;
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
+/* Hint */
+.editor-hint {
   margin-top: 12px;
-  flex-wrap: wrap;
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid #3b82f6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--text-color, #fff);
 }
 
-.actions .primary {
+/* Buttons */
+.primary {
   background: #2563eb;
   color: #fff;
   border: none;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
-.actions .secondary {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.3);
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
+.primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
 }
 
-.actions .ghost {
-  background: transparent;
-  color: #fff;
-  border: 1px dashed rgba(255,255,255,0.3);
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
+/* Responsive */
 @media (max-width: 900px) {
-  .image-doc-grid {
-    grid-template-columns: 1fr;
+  .editor-toolbar {
+    gap: 8px;
+  }
+  .toolbar-group {
+    gap: 4px;
   }
 }
 
-/* Dark mode compatibility via existing theme classes */
-.dark .panel {
-  background: rgba(255,255,255,0.06);
+/* Dark mode compatibility */
+.dark .toolbar-select,
+.dark .toolbar-input {
+  color: #e5e7eb;
 }
-.dark .overlay-box { color: #e5e7eb; }
-.dark .editable-text { color: #e5e7eb; }
+
+.dark .text-box-content {
+  color: #1f2937;
+}

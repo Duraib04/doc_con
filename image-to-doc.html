@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image to Word – DURAI</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="image-to-doc.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" rx="8" fill="#2563eb"/>
+                    <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">D</text>
+                </svg>
+                <span class="brand">DURAI</span>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="ai-generator.html">AI Generator</a>
+                <a href="pdf-to-ppt.html">PDF to PPT</a>
+                <a href="website-report.html">Website Report</a>
+                <a href="image-to-doc.html" class="active">Image to Word</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <div class="nav-search" style="display:inline-block;position:relative;margin:0 10px">
+                    <input id="siteSearch" type="search" placeholder="Search..." style="padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;width:180px" />
+                    <div id="searchSuggestions" class="search-suggestions" style="display:none;position:absolute;top:100%;left:0;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);margin-top:4px;min-width:250px;z-index:1000"></div>
+                </div>
+                <button id="themeToggle" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;cursor:pointer">🌓 Theme</button>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h1>Convert Image to Editable Word</h1>
+                <p class="subtitle">Upload an image, extract text with OCR, edit, and export to DOCX</p>
+            </section>
+
+            <section class="image-doc-section">
+                <div class="image-doc-grid">
+                    <div class="panel">
+                        <div class="box-header">
+                            <h2>Upload Image</h2>
+                        </div>
+                        <input id="imageInput" type="file" accept="image/*" />
+
+                        <div class="canvas-wrapper">
+                            <div class="canvas-stack">
+                                <canvas id="imageCanvas"></canvas>
+                                <div id="overlayContainer" class="overlay-container" aria-label="Editable overlay"></div>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button id="enableOverlayBtn" class="secondary">Enable In-Image Editing</button>
+                            <button id="applyOverlayBtn" class="ghost">Apply Edits to Image</button>
+                            <button id="downloadImageBtn" class="ghost">Download Updated Image (PNG)</button>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="box-header">
+                            <h2>Extracted Text (Editable)</h2>
+                        </div>
+                        <div id="ocrStatus" class="status">No image loaded</div>
+                        <div id="ocrText" class="editable-text" contenteditable="true" spellcheck="true"></div>
+
+                        <div class="actions">
+                            <button id="runOcrBtn" class="primary">Extract Text</button>
+                            <button id="exportDocxBtn" class="primary">Export to Word (DOCX)</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 DURAI Document Converter. All rights reserved.</p>
+                <p>Created by DURAI</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <!-- Shared -->
+    <script src="theme.js"></script>
+    <script src="search.js"></script>
+
+    <!-- Feature Script -->
+    <script src="image-to-doc.js"></script>
+    
+</body>
+</html>
